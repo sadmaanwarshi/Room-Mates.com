@@ -1,0 +1,503 @@
+<%- include("../partials/owner/navbar.ejs") %>
+
+<div class="container mt-5">
+    <h2>Create PG Listing</h2>
+    <form class="needs-validation" action="/pg/owner/update/<%= listing.id %>" method="POST" enctype="multipart/form-data" novalidate>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" name="ownerName" value="<%= listing.owner_name %>" id="Name" >
+                <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="pgName" class="form-label">PG Name</label>
+                <input type="text" class="form-control" name="pgName" value="<%= listing.pg_name %>" id="pgName" >
+                <div class="invalid-feedback">Please enter the PG name.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" name="address" value="<%= listing.address %>" id="address" >
+                <div class="invalid-feedback">Please enter the address.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="city" value="<%= listing.city %>" id="city" >
+                <div class="invalid-feedback">Please enter the city.</div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">State</label>
+                <select class="form-select" name="state"  id="validationCustom04" >
+                  <option selected disabled value=""><%= listing.state %></option>
+                  <option>West Bengal</option>
+                  <option>Jharkhand</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid state.
+                </div>
+              </div>
+
+            <div class="col-md-4">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= listing.phone_number %>"  pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="altPhoneNumber" class="form-label">Alternate Phone Number</label>
+                <input type="tel" class="form-control" id="altPhoneNumber" name="alterPhoneNumber" value="<%= listing.alternate_phone_number %>" pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="pricePerMonth" class="form-label">Price per Month</label>
+                <input type="number" class="form-control" name="priceMonthly" value="<%= listing.price_per_month %>" id="pricePerMonth" >
+                <div class="invalid-feedback">Please enter the price.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="depositAmount" class="form-label">Deposit Amount</label>
+                <input type="number" class="form-control" name="depositAmount" value="<%= listing.deposit_amount %>" id="depositAmount" >
+                <div class="invalid-feedback">Please enter the deposit amount.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="electricCharge" class="form-label">Electric Charge</label>
+                <div class="input-group has-validation">
+                    <input type="number" class="form-control" name="electricCharge"  value="<%= listing.electric_charge %>"  id="electricCharge" >
+                    <span class="input-group-text"> / unit</span>
+                    <div class="invalid-feedback">
+                        Please enter the electric charge.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="maintenance" class="form-label">Maintenance Fee</label>
+                <input type="number" class="form-control" name="maintenanceCharge"  value="<%= listing.maintenance_fee %>" id="maintenance" >
+                <div class="invalid-feedback">Please enter the maintenance fee.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="noticePeriod" class="form-label">Notice Period (in days)</label>
+                <input type="number" class="form-control" name="noticePeriod"  value="<%= listing.notice_period %>" id="noticePeriod" >
+                <div class="invalid-feedback">Please enter the notice period.</div>
+            </div>
+
+            <!-- Food availabilty  -->
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Food Available (Include price in Price Per Month)</label>
+                <select class="form-select" name="foodAvailability" id="validationCustom04" >
+                    <option selected disabled value="">Select availability</option>
+                    <option value="yes" <% if (listing.food_availibility === true) { %> selected <% } %>>Yes</option>
+                    <option value="no" <% if (listing.food_availibility === false) { %> selected <% } %>>No</option>
+                    <option value="not_available">Not Available</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
+
+              <!-- food type  -->
+              <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Food Type</label>
+                <select class="form-select" name="foodType" id="validationCustom04" >
+                  <option selected disabled value=""><%= listing.food_type %></option>
+                  <option>Veg</option>
+                  <option>Non veg</option>
+                  <option>Not Available</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
+
+              <!-- description  -->
+              <div class="col-md-8">
+                <label for="description" class="form-label">Description<span>(Please write properly it will shown on Top)</span></label>
+                <textarea class="form-control" id="description" name="description" rows="3" ><%= listing.description %></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+            </div>
+
+             <!-- Amenities section  -->
+<div class="col-md-12">
+    <label class="form-label">Amenities</label>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="AC" name="amenities" id="ac" 
+            <% if (listing.amenities.AC === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="ac">AC</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="WiFi" name="amenities" id="wifi" 
+            <% if (listing.amenities.WiFi === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="wifi">WiFi</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="DrinkingWater" name="amenities" id="drinkingWater" 
+            <% if (listing.amenities.DrinkingWater === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="drinkingWater">Drinking Water</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Laundry" name="amenities" id="laundry" 
+            <% if (listing.amenities.Laundry === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="laundry">Laundry</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Parking" name="amenities" id="parking" 
+            <% if (listing.amenities.Parking === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="parking">Parking</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Gym" name="amenities" id="gym" 
+            <% if (listing.amenities.Gym === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="gym">Gym</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Pool" name="amenities" id="pool" 
+            <% if (listing.amenities.Pool === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="pool">Pool</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="Meal" name="amenities" id="meal" 
+            <% if (listing.amenities.Meal === 'true') { %> checked <% } %> >
+        <label class="form-check-label" for="meal">Meal</label>
+    </div>
+</div>
+
+
+            <!-- prefered tenants  -->
+            <div class="col-md-4">
+                <label for="preferredTenants" class="form-label">Preferred Tenants</label>
+                <select class="form-select" name="tenants" id="preferredTenants" >
+                    <option selected disabled value=""><%= listing.preferred_tenants %></option>
+                    <option>Students</option>
+                    <option>Working Professionals</option>
+                    <option>Both</option>
+                </select>
+                <div class="invalid-feedback">Please select the preferred tenants.</div>
+            </div>
+
+            <!-- prefered gender  -->
+            <div class="col-md-4">
+                <label for="preferredFor" class="form-label">Preferred For</label>
+                <select class="form-select" name="preferredGender" id="preferredFor" >
+                    <option selected disabled value=""><%= listing.preferred_gender %></option>
+                    <option>Boys</option>
+                    <option>Girls</option>
+                    <option>Both</option>
+                </select>
+                <div class="invalid-feedback">Please select a preference.</div>
+            </div>
+            
+            <!-- rent type  -->
+            
+            <div class="mb-3">
+                <label for="rentType" class="form-label">Rent Type</label>
+                <select class="form-select" name="rentType" id="rentType">
+                    <option selected disabled value=""><%= listing.rent_type %></option>
+                    <option value="Room">Single Room</option>
+                    <option value="Bed">Sharing Room</option>
+                    <option value="Flat">Flat</option>
+                    <option value="House">House</option>
+                </select>
+                <div class="invalid-feedback">Please select a rent type.</div>
+            </div>
+            
+            <!-- Conditional Fields Section -->
+            <div class="col-md-12" id="conditionalFields" style="display: none;">
+                <h5>Details for Selected Rent Type</h5>
+            
+                <!-- Number of Rooms Dropdown -->
+                <div class="mb-3" id="numberOfRooms" style="display: none;">
+                    <label for="roomsSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="roomsSelect">
+                        <option selected disabled value="">Choose Rooms Type...</option>
+                        <option value="Single Bed Room">Single Sharing Room</option>
+                        <option value="Double Bed Room">Double Sharing Room</option>
+                        <option value="Triple Bed Room">Triple Sharing Room</option>
+                    </select>
+
+                    <label for="roomsSelect" class="form-label">Number of Rooms</label>
+                    <select class="form-select" name="quantity" id="roomsSelect">
+                        <option selected disabled value="">Choose Number of Rooms...</option>
+                        <option value="1">1 Room</option>
+                        <option value="2">2 Room</option>
+                        <option value="3">3 Room</option>
+                        <option value="4">4 Room</option>
+                        <option value="5">5 Room</option>
+                        <option value="6">6 Room</option>
+                        <option value="7">7 Room</option>
+                    </select>
+                    <div class="invalid-feedback">Please select the number of rooms.</div>
+                </div>
+            
+                <!-- Number of Beds Dropdown -->
+                <div class="mb-3" id="numberOfBeds" style="display: none;">
+                    <label for="bedsSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="bedsSelect">
+                        <option selected disabled value="">Choose Room Type...</option>
+                        <option value="Single Sharing Room">Single Sharing Room</option>
+                        <option value="Double Sharing Room">Double Sharing Room</option>
+                        <option value="Triple Sharing Room">Triple Sharing Room</option>
+                        <option value="Four Sharing Room">Four Sharing Room</option>
+                    </select>
+
+                    <label for="bedsSelect" class="form-label">Beds Available</label>
+                    <select class="form-select" name="quantity" id="bedsSelect">
+                        <option selected disabled value="">Choose No of Beds Available...</option>
+                        <option value="1">1 Bed</option>
+                        <option value="2">2 Bed</option>
+                        <option value="3">3 Bed</option>
+                        <option value="4">4 Bed</option>
+                        <option value="5">5 Bed</option>
+                        <option value="6">6 Bed</option>
+                        <option value="7">7 Bed</option>
+                        <option value="8">8 Bed</option>
+                    </select>
+
+                    <div class="invalid-feedback">Please select the number of beds.</div>
+                </div>
+            
+                <!-- BHK Dropdown -->
+                <div class="mb-3" id="bhk" style="display: none;">
+                    <label for="bhkSelect" class="form-label">BHK</label>
+                    <select class="form-select" name="quantity" id="bhkSelect">
+                        <option selected disabled value="">Choose BHK...</option>
+                        <option value="1">1 BHK</option>
+                        <option value="2">2 BHK</option>
+                        <option value="3">3 BHK</option>
+                        <option value="4">4 BHK</option>
+                        <option value="5">5 BHK</option>
+                        <option value="6">6 BHK</option>
+                        <option value="7">7 BHK</option>
+                    </select>
+
+                    <label for="bhkSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="bhkSelect">
+                        <option selected disabled value="">Room Type</option>
+                        <option value="Single Sharing Room">Single Sharing Room</option>
+                        <option value="Double Sharing Room">Double Sharing Room</option>
+                        <option value="Triple Sharing Room">Triple Sharing Room</option>
+                        <option value="Four Sharing Room">Four Sharing Room</option>
+                    </select>
+                    <div class="invalid-feedback">Please select BHK.</div>
+                </div>
+            
+                <!-- Number of Stories Dropdown -->
+                <div class="mb-3" id="storiesOfHouse" style="display: none;">
+                    <label for="storiesSelect" class="form-label">Number of Stories</label>
+                    <select class="form-select" name="quantity" id="storiesSelect">
+                        <option selected disabled value="">Choose Number of Stories...</option>
+                        <option value="1">1 floor</option>
+                        <option value="2">2 floors</option>
+                        <option value="3">3 floors</option>
+                        <option value="4">4 floors</option>
+                        <option value="5">5 floors</option>
+                    </select>
+
+                    <label for="storiesSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="storiesSelect">
+                        <option selected disabled value="">Choose Number of Stories...</option>
+                        <option selected disabled value="">Choose BHK...</option>
+                        <option value="1 BHK">1 BHK</option>
+                        <option value="2 BHK">2 BHK</option>
+                        <option value="3 BHK">3 BHK</option>
+                        <option value="4 BHK">4 BHK</option>
+                        <option value="5 BHK">5 BHK</option>
+                        <option value="6 BHK">6 BHK</option>
+                        <option value="7 BHK">7 BHK</option>
+                    </select>
+                    <div class="invalid-feedback">Please select the number of stories.</div>
+                </div>
+            </div>
+            
+
+            <!-- rules and regulation  -->
+            <div class="col-md-12">
+                <label for="rulesAndRegulations" class="form-label">Rules and Regulations <span>(Please Check box If Allowed)</span></label>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="gateClosing" 
+                        <% if (listing.custom_rule.includes("Gate Closing time")) { %> checked <% } %> >
+                    <label class="form-check-label" for="gateClosing">Gate Closing time</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg" 
+                        <% if (listing.custom_rule.includes("Non-Veg Food Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="nonveg">Non Veg Food</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="smoking" 
+                        <% if (listing.custom_rule.includes("Smoking Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="smoking">Smoking</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alcohol" 
+                        <% if (listing.custom_rule.includes("Drinking Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="alcohol">Alcohol</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="pets" 
+                        <% if (listing.custom_rule.includes("Pet Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="pets">Pets</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed" 
+                        <% if (listing.custom_rule.includes("Visitors Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="loudmusic" 
+                        <% if (listing.custom_rule.includes("Loud Music Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="loudmusic">Loud Music</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositegender" 
+                        <% if (listing.custom_rule.includes("Opposite Gender Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="oppositegender">Opposite Gender</label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party" 
+                        <% if (listing.custom_rule.includes("Party Allowed")) { %> checked <% } %> >
+                    <label class="form-check-label" for="party">Party</label>
+                </div>
+            
+                <div class="invalid-feedback">Please select at least one rule or regulation.</div>
+            </div>
+                        
+        <!-- naerby location section  -->
+            <div class="col-md-12">
+                <label for="nearbyUniversities" class="form-label">Nearby Target Universities</label>
+                <input type="text" class="form-control" name="nearbyUniversities" value="<%= listing.nearby_universities %>" id="nearbyUniversities" >
+                <div class="invalid-feedback">Please enter nearby universities.</div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="nearbyOrganizations" class="form-label">Nearby Target Organizations</label>
+                <input type="text" class="form-control" name="nearbyOrganizations" value="<%= listing.nearby_organizations %>" id="nearbyOrganizations" >
+                <div class="invalid-feedback">Please enter nearby organizations.</div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="nearbyLocations" class="form-label">Nearby Locations</label>
+                <input type="text" class="form-control" name="nearbyLocations" value="<%= listing.nearby_locations %>" id="nearbyLocations" >
+                <div class="invalid-feedback">Please enter nearby locations.</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="mainImage" class="form-label">Main Image Upload</label>
+            <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*" >
+            <div class="invalid-feedback">Please upload the main image.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="additionalImages" class="form-label">Additional Image Uploads</label>
+            <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
+        </div>
+        <button class="btn btn-primary mt-4" type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const rentType = document.getElementById('rentType');
+    const conditionalFields = document.getElementById('conditionalFields');
+    const roomsSelect = document.getElementById('numberOfRooms');
+    const bedsSelect = document.getElementById('numberOfBeds');
+    const bhkSelect = document.getElementById('bhk');
+    const storiesSelect = document.getElementById('storiesOfHouse');
+
+    function updateConditionalFields() {
+        // Hide all conditional fields initially
+        roomsSelect.style.display = 'none';
+        bedsSelect.style.display = 'none';
+        bhkSelect.style.display = 'none';
+        storiesSelect.style.display = 'none';
+
+        // Show appropriate fields based on selected rent type
+        switch (rentType.value) {
+            case 'Room':
+                roomsSelect.style.display = 'block';
+                break;
+            case 'Bed':
+                bedsSelect.style.display = 'block';
+                break;
+            case 'Flat':
+                bhkSelect.style.display = 'block';
+                break;
+            case 'House':
+                storiesSelect.style.display = 'block';
+                break;
+        }
+
+        // Show conditional fields section if rent type is selected
+        conditionalFields.style.display = rentType.value ? 'block' : 'none';
+    }
+
+    rentType.addEventListener('change', updateConditionalFields);
+
+    // Initial call to set the fields correctly
+    updateConditionalFields();
+});
+
+
+    // Example JavaScript for form validation
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>
+
+
+
+
+
+
+    <h1>Update PG Listing</h1>
+    <form action="/pg/owner/update/<%= listing.id %>" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="<%= listing.pgname %>"  />
+
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" value="<%= listing.address %>"  />
+
+        <label for="city">City:</label>
+        <input type="text" name="city" id="city" value="<%= listing.city %>"  />
+
+        <label for="price">Price per month:</label>
+        <input type="number" name="price" id="price" value="<%= listing.price_per_month %>"  />
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" ><%= listing.description %></textarea>
+
+        <h3>Amenities:</h3>
+        <label><input type="checkbox" name="amenities[]" value="AC" <%= listing.amenities.AC === "true" ? "checked" : "" %> /> AC</label>
+        <label><input type="checkbox" name="amenities[]" value="WiFi" <%= listing.amenities.WiFi === "true" ? "checked" : "" %> /> WiFi</label>
+        <label><input type="checkbox" name="amenities[]" value="Parking" <%= listing.amenities.Parking === "true" ? "checked" : "" %> /> Parking</label>
+
+        <button type="submit">Update Listing</button>
+    </form>
+
+

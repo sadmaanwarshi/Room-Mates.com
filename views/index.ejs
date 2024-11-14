@@ -1,0 +1,123 @@
+<%- include("partials/navbar.ejs") %>
+
+<!-- Navbar for Search and Filter -->
+<nav class="navbar navbar-light bg-light mb-4" style="background: linear-gradient(90deg, #00c6ff, #0072ff);">
+    <div class="container-fluid justify-content-center">
+        <form class="d-flex mx-2" action="/pg/user/search/location" method="GET" style="flex: 1; max-width: 400px;">
+            <input class="form-control me-2" type="text" name="search" placeholder="Enter City..." aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+
+        <!-- Dropdown Button for Filters -->
+        <div class="ms-3 dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Filters
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                <li><a class="dropdown-item" href="#">Select Max Price</a></li>
+                <li><a class="dropdown-item" href="#">Select Amenities</a></li>
+                <li><a class="dropdown-item" href="#">Select Gender</a></li>
+                <li><a class="dropdown-item" href="#">Select Rent Type</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Container for Content -->
+<div class="container d-flex flex-column align-items-center my-4">
+    <!-- Welcome Section -->
+    <div class="card mb-4 w-100 text-center" style="background: linear-gradient(90deg, #0072ff, #00c6ff); color: white;">
+        <div class="card-body">
+            <h5 class="card-title">Welcome to Second Home Accommodation Finder</h5>
+            <p class="card-text">
+                Discover and book PG accommodations with ease. Use our filters to find the best match for your needs.
+            </p>
+        </div>
+    </div>
+
+    <!-- PG Accommodation Card -->
+    <div class="card mb-4 w-100 shadow-sm" style="max-width: 800px; border-radius: 12px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img class="img-fluid h-100" src="assets/images/pp.jpg" alt="PG Accommodation" style="object-fit: cover; width: 100%; height: 100%;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <!-- Price and Food Badge -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title m-0">
+                            <i class="bi bi-currency-rupee me-1"></i> 8,000 / Month
+                        </h5>
+                        <span class="badge bg-success" style="font-size: 0.9em;"><i class="bi bi-check-circle"></i> With Food</span>
+                    </div>
+                    
+                    <!-- Name and Bed Type Section -->
+                    <div class="d-flex justify-content-between">
+                        <p class="card-text m-0"><strong>Name:</strong> Demo PG House</p>
+                        <p class="card-text m-0"><strong>Bed Type:</strong> Single Bed</p>
+                    </div>
+
+                    <!-- Address Section -->
+                    <p class="card-text mt-2"><strong>Address:</strong> 123 Demo Street, Demo City <i class="bi bi-geo-alt-fill"></i></p>
+
+                    <!-- Description Section -->
+                    <p class="card-text"><strong>Description:</strong> A cozy PG with all essential amenities for comfortable living.</p>
+
+                    <!-- Amenities Badges -->
+                    <p class="card-text"><strong>Amenities:</strong>
+                        <span class="badge bg-primary me-2">WiFi</span>
+                        <span class="badge bg-primary me-2">Meals</span>
+                        <span class="badge bg-primary me-2">AC</span>
+                    </p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex mt-3">
+                        <a href="#" class="btn btn-primary me-2" style="flex: 1;">View Details</a>
+                        <a href="#" class="btn btn-success" style="flex: 1;">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login Prompt Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Please Login to Continue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>To use all features of our platform, please <a href="/auth/page/login/student" class="text-decoration-underline">login</a> or <a href="/auth/page/login/student" class="text-decoration-underline">register</a> an account.</p>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <a href="/auth/page/login/student" class="btn btn-primary me-2" style="width: 45%;">Login</a>
+                <a href="/auth/page/login/student" class="btn btn-outline-secondary" style="width: 45%;">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("./partials/footer.ejs") %>
+
+<!-- JavaScript to Trigger Modal on Page Load and Certain Actions -->
+<script>
+    // Show the login modal on page load
+    $(document).ready(function() {
+        $('#loginModal').modal('show');
+    });
+
+    // Event listeners for triggering the login modal
+    $('form').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        $('#loginModal').modal('show'); // Show the login modal
+    });
+
+    $('.btn').on('click', function(event) {
+        if (!$(event.target).closest('.modal-footer').length) {
+            $('#loginModal').modal('show');
+        }
+    });
+</script>

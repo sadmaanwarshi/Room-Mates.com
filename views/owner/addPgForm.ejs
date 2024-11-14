@@ -1,0 +1,546 @@
+<%- include("../partials/owner/navbar.ejs") %>
+
+<div class="container mt-5">
+    <h2>Create PG Listing</h2>
+    <form class="needs-validation" action="/pg/owner/add" method="POST" enctype="multipart/form-data" novalidate>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" name="ownerName" id="Name" required>
+                <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="pgName" class="form-label">PG Name</label>
+                <input type="text" class="form-control" name="pgName" id="pgName" required>
+                <div class="invalid-feedback">Please enter the PG name.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" name="address" id="address" required>
+                <div class="invalid-feedback">Please enter the address.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="city" id="city" required>
+                <div class="invalid-feedback">Please enter the city.</div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="pincode" class="form-label">Pincode</label>
+                <input type="text" class="form-control" name="pincode" id="pincode" required>
+                <div class="invalid-feedback">Please enter the pincode.</div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">State</label>
+                <select class="form-select" name="state" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>West Bengal</option>
+                  <option>Jharkhand</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid state.
+                </div>
+              </div>
+
+              <!-- Button to Get Location -->
+<div class="col-md-12 my-3">
+    <button type="button" class="btn btn-primary" onclick="getLocation()">Get My Location</button>
+</div>
+
+            <div class="col-md-4">
+                <label for="phoneNumber" class="form-label">Phone Numbe(+91)</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="altPhoneNumber" class="form-label">Alternate Phone Number(+91)</label>
+                <input type="tel" class="form-control" id="altPhoneNumber" name="alterPhoneNumber" pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="pricePerMonth" class="form-label">Price per Month</label>
+                <input type="number" class="form-control" name="priceMonthly" id="pricePerMonth" required>
+                <span class="input-group-text">₹</span>
+                <div class="invalid-feedback">Please enter the price.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="depositAmount" class="form-label">Deposit Amount</label>
+                <input type="number" class="form-control" name="depositAmount" id="depositAmount" required>
+                <div class="invalid-feedback">Please enter the deposit amount.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="electricCharge" class="form-label">Electric Charge</label>
+                <input type="number" class="form-control" name="electricCharge" id="electricCharge" required>
+                <span class="input-group-text"> / Unit</span>
+                <div class="invalid-feedback">Please enter the electric charge.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="maintenance" class="form-label">Maintenance Fee</label>
+                <input type="number" class="form-control" name="maintenanceCharge" id="maintenance" required>
+                <div class="invalid-feedback">Please enter the maintenance fee.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="noticePeriod" class="form-label">Notice Period (in days)</label>
+                <input type="number" class="form-control" name="noticePeriod" id="noticePeriod" required>
+                <div class="invalid-feedback">Please enter the notice period.</div>
+            </div>
+
+            <!-- Food availabilty  -->
+            <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Food Available (Include price in Price Per Month)</label>
+                <select class="form-select" name="foodAvailability" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
+
+              <!-- food type  -->
+              <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">Food Type</label>
+                <select class="form-select" name="foodType" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>Veg</option>
+                  <option>Non veg</option>
+                  <option>Not Available</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
+
+              <!-- description  -->
+              <div class="col-md-8">
+                <label for="description" class="form-label">Description<span>(Please write properly it will shown on Top)</span></label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+            </div>
+
+              <!-- Amenenties section  -->
+            <div class="col-md-12">
+                <label class="form-label">Amenities</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="AC" name="amenities" id="ac">
+                    <label class="form-check-label" for="ac">AC</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="WiFi" name="amenities" id="wifi">
+                    <label class="form-check-label" for="wifi">WIFI</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="DrinkingWater" name="amenities" id="drinkingWater">
+                    <label class="form-check-label" for="drinkingWater">Drinking Water</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Laundry" name="amenities" id="laundry">
+                    <label class="form-check-label" for="laundry">Laundry</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Parking" name="amenities" id="parking">
+                    <label class="form-check-label" for="parking">Parking</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Gym" name="amenities" id="gym">
+                    <label class="form-check-label" for="gym">Gym</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Bed" name="amenities" id="bed">
+                    <label class="form-check-label" for="bed">Bed</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="PowerBackup" name="amenities" id="power">
+                    <label class="form-check-label" for="power">Power Backup</label>
+                </div>
+                
+            </div>
+
+
+            <!-- prefered tenants  -->
+            <div class="col-md-4">
+                <label for="preferredTenants" class="form-label">Preferred Tenants</label>
+                <select class="form-select" name="tenants" id="preferredTenants" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option>Students</option>
+                    <option>Working Professionals</option>
+                    <option>Both</option>
+                </select>
+                <div class="invalid-feedback">Please select the preferred tenants.</div>
+            </div>
+
+            <!-- prefered gender  -->
+            <div class="col-md-4">
+                <label for="preferredFor" class="form-label">Preferred For</label>
+                <select class="form-select" name="preferredGender" id="preferredFor" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option>Boys</option>
+                    <option>Girls</option>
+                    <option>Both</option>
+                </select>
+                <div class="invalid-feedback">Please select a preference.</div>
+            </div>
+            
+            <!-- rent type  -->
+            
+            <div class="mb-3">
+                <label for="rentType" class="form-label">Rent Type</label>
+                <select class="form-select" name="rentType" id="rentType" required>
+                    <option selected disabled value="">Choose Rent Type...</option>
+                    <option value="Single Room">Single Room</option>
+                    <option value="Sharing Room">Sharing Room</option>
+                    <option value="Flat">Flat</option>
+                    <option value="House">House</option>
+                </select>
+                <div class="invalid-feedback">Please select a rent type.</div>
+            </div>
+            
+            <!-- Conditional Fields Section -->
+            <div class="col-md-12" id="conditionalFields" style="display: none;">
+                <h5>Details for Selected Rent Type</h5>
+            
+                <!-- For Single Room Type-->
+                <div class="mb-3" id="numberOfRooms" style="display: none;">
+                    <label for="roomsSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="roomsSelect">
+                        <option selected disabled value="">Choose Rooms Type...</option>
+                        <option value="Single Bed Room">Single Bed Room</option>
+                        <option value="Double Bed Room">Double Bed Room</option>
+                        <option value="Triple Bed Room">Triple Bed Room</option>
+                    </select>
+                    
+                    <!-- Quantity Room  -->
+                    <label for="roomsSelect" class="form-label">Number of Rooms</label>
+                    <select class="form-select" name="quantity" id="roomsSelect">
+                        <option selected disabled value="">Choose Number of Rooms...</option>
+                        <option value="1">1 Room</option>
+                        <option value="2">2 Room</option>
+                        <option value="3">3 Room</option>
+                        <option value="4">4 Room</option>
+                        <option value="5">5 Room</option>
+                        <option value="6">6 Room</option>
+                        <option value="7">7 Room</option>
+                    </select>
+                    <div class="invalid-feedback">Please select the number of rooms.</div>
+                </div>
+            
+                <!-- Sharing ROOM  -->
+                <div class="mb-3" id="numberOfBeds" style="display: none;">
+                    <label for="bedsSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="bedsSelect">
+                        <option selected disabled value="">Choose Room Type...</option>
+                        <option value="Single Sharing Room">Single Sharing Room</option>
+                        <option value="Double Sharing Room">Double Sharing Room</option>
+                        <option value="Triple Sharing Room">Triple Sharing Room</option>
+                        <option value="Four Sharing Room">Four Sharing Room</option>
+                    </select>
+
+                    <!-- Number of Beds Dropdown -->
+                    <label for="bedsSelect" class="form-label">Beds Available</label>
+                    <select class="form-select" name="quantity" id="bedsSelect">
+                        <option selected disabled value="">Choose No of Beds Available...</option>
+                        <option value="1">1 Bed</option>
+                        <option value="2">2 Bed</option>
+                        <option value="3">3 Bed</option>
+                        <option value="4">4 Bed</option>
+                        <option value="5">5 Bed</option>
+                        <option value="6">6 Bed</option>
+                        <option value="7">7 Bed</option>
+                        <option value="8">8 Bed</option>
+                    </select>
+
+                    <div class="invalid-feedback">Please select the number of beds.</div>
+                </div>
+            
+                <!-- BHK Dropdown -->
+                <div class="mb-3" id="bhk" style="display: none;">
+                    <label for="bhkSelect" class="form-label">BHK</label>
+                    <select class="form-select" name="quantity" id="bhkSelect">
+                        <option selected disabled value="">Choose BHK...</option>
+                        <option value="1">1 BHK</option>
+                        <option value="2">2 BHK</option>
+                        <option value="3">3 BHK</option>
+                        <option value="4">4 BHK</option>
+                        <option value="5">5 BHK</option>
+                        <option value="6">6 BHK</option>
+                        <option value="7">7 BHK</option>
+                    </select>
+
+                    <!-- BHK room Type  -->
+                    <label for="bhkSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="bhkSelect">
+                        <option selected disabled value="">Room Type</option>
+                        <option value="Single Sharing Room">Single Sharing Room</option>
+                        <option value="Double Sharing Room">Double Sharing Room</option>
+                        <option value="Triple Sharing Room">Triple Sharing Room</option>
+                        <option value="Four Sharing Room">Four Sharing Room</option>
+                    </select>
+                    <div class="invalid-feedback">Please select BHK.</div>
+                </div>
+            
+                <!-- Number of Stories Dropdown -->
+                <div class="mb-3" id="storiesOfHouse" style="display: none;">
+                    <label for="storiesSelect" class="form-label">Number of Stories</label>
+                    <select class="form-select" name="quantity" id="storiesSelect">
+                        <option selected disabled value="">Choose Number of Stories...</option>
+                        <option value="1">1 floor</option>
+                        <option value="2">2 floors</option>
+                        <option value="3">3 floors</option>
+                        <option value="4">4 floors</option>
+                        <option value="5">5 floors</option>
+                    </select>
+
+                    <label for="storiesSelect" class="form-label">Room Type</label>
+                    <select class="form-select" name="roomType" id="storiesSelect">
+                        <option selected disabled value="">Choose Number of Stories...</option>
+                        <option selected disabled value="">Choose BHK...</option>
+                        <option value="1 BHK">1 BHK</option>
+                        <option value="2 BHK">2 BHK</option>
+                        <option value="3 BHK">3 BHK</option>
+                        <option value="4 BHK">4 BHK</option>
+                        <option value="5 BHK">5 BHK</option>
+                        <option value="6 BHK">6 BHK</option>
+                        <option value="7 BHK">7 BHK</option>
+                    </select>
+                    <div class="invalid-feedback">Please select the number of stories.</div>
+                </div>
+            </div>
+            
+            <!-- Restriction type  -->
+            <div class="col-md-4">
+                <label for="preferredFor" class="form-label">Restriction Type</label>
+                <select class="form-select" name="restrictionType" id="restrictiontype" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option>Restriction</option>
+                    <option>Partial Restriction</option>
+                    <option>Non Restriction</option>
+                </select>
+                <div class="invalid-feedback">Please select a preference.</div>
+            </div>
+
+            <!-- rules and regulation  -->
+            <div class="col-md-12">
+                <label for="rulesAndRegulations" class="form-label">Rules and Regulations <spann>(Please Check box If Allowed)</spann></label>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="Smoking">
+                    <label class="form-check-label" for="Smoking">Gate Closing time</label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg">
+                    <label class="form-check-label" for="nonveg">Non Veg Food</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="Smoking">
+                    <label class="form-check-label" for="Smoking">Smoking</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alchohol">
+                    <label class="form-check-label" for="alchohol">Alchohol</label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="Pets">
+                    <label class="form-check-label" for="noPets">Pets</label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed">
+                    <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="quietHours">
+                    <label class="form-check-label" for="loudmusic">Loud Music</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositegender">
+                    <label class="form-check-label" for="oppositegender">Opposite Gender</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party">
+                    <label class="form-check-label" for="party">Party</label>
+                </div>
+            
+                <div class="invalid-feedback">Please select at least one rule or regulation.</div>
+            </div>
+            
+        <!-- naerby location section  -->
+            <div class="col-md-12">
+                <label for="nearbyUniversities" class="form-label">Nearby Target Universities</label>
+                <input type="text" class="form-control" name="nearbyUniversities" id="nearbyUniversities" required>
+                <div class="invalid-feedback">Please enter nearby universities.</div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="nearbyOrganizations" class="form-label">Nearby Target Organizations</label>
+                <input type="text" class="form-control" name="nearbyOrganizations" id="nearbyOrganizations" required>
+                <div class="invalid-feedback">Please enter nearby organizations.</div>
+            </div>
+
+            <div class="col-md-12">
+                <label for="nearbyLocations" class="form-label">Nearby Locations</label>
+                <input type="text" class="form-control" name="nearbyLocations" id="nearbyLocations" required>
+                <div class="invalid-feedback">Please enter nearby locations.</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="mainImage" class="form-label">Main Image Upload</label>
+            <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*" required>
+            <div class="invalid-feedback">Please upload the main image.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="additionalImages" class="form-label">Additional Image Uploads</label>
+            <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
+        </div>
+        <button class="btn btn-primary mt-4" type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const rentType = document.getElementById('rentType');
+    const conditionalFields = document.getElementById('conditionalFields');
+    const roomsSelect = document.getElementById('numberOfRooms');
+    const bedsSelect = document.getElementById('numberOfBeds');
+    const bhkSelect = document.getElementById('bhk');
+    const storiesSelect = document.getElementById('storiesOfHouse');
+
+    function updateConditionalFields() {
+        // Hide all conditional fields initially
+        roomsSelect.style.display = 'none';
+        bedsSelect.style.display = 'none';
+        bhkSelect.style.display = 'none';
+        storiesSelect.style.display = 'none';
+
+        // Show appropriate fields based on selected rent type
+        switch (rentType.value) {
+            case 'Room':
+                roomsSelect.style.display = 'block';
+                break;
+            case 'Bed':
+                bedsSelect.style.display = 'block';
+                break;
+            case 'Flat':
+                bhkSelect.style.display = 'block';
+                break;
+            case 'House':
+                storiesSelect.style.display = 'block';
+                break;
+        }
+
+        // Show conditional fields section if rent type is selected
+        conditionalFields.style.display = rentType.value ? 'block' : 'none';
+    }
+
+    rentType.addEventListener('change', updateConditionalFields);
+
+    // Initial call to set the fields correctly
+    updateConditionalFields();
+});
+
+
+    // Example JavaScript for form validation
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+
+    const apiKey = 'dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ'; // Replace with your actual API key
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    // Call the function to convert lat/lon to address
+    getAddressFromLatLng(latitude, longitude);
+}
+
+function getAddressFromLatLng(latitude, longitude) {
+    const url = `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${latitude},${longitude}&api_key=${apiKey}`;
+    
+    fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data); // Log the API response to understand its structure
+        // Assuming the response contains the address details
+        if (data.results && data.results.length > 0) {
+            const address = data.results[0].formatted_address; // Adjust based on your API response structure
+            const city = data.results[0].address_components.find(component => component.types.includes('locality'))?.long_name || ""; // Use optional chaining
+            const state = data.results[0].address_components.find(component => component.types.includes('administrative_area_level_1'))?.long_name || ""; // Use optional chaining
+            const pincode = data.results[0].address_components.find(component => component.types.includes('postal_code'))?.long_name || ""; // Extract pincode
+
+            // Populate the fields with the address details
+            document.getElementById("address").value = address;
+            document.getElementById("city").value = city;
+            document.getElementById("validationCustom04").value = state;
+            document.getElementById("pincode").value = pincode; // Set pincode
+        } else {
+            alert("No results found for this location.");
+        }
+    })
+    .catch(error => {
+        console.error("There was a problem with the fetch operation:", error);
+        alert("Failed to get address. Please try again.");
+    });
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }
+}
+</script>

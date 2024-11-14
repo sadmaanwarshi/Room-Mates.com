@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ola Maps with API Key</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.css" />
+  <style>
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Load the Ola Maps SDK -->
+  <script src="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Initialize the map
+      const myMap = olaMaps.init({
+        container: "map",  // Div ID for map container
+        center: [77.5353394, 16.03106], // Set initial coordinates
+        zoom: 10, // Set initial zoom level
+        style: "https://api.olamaps.io/styleEditor/v1/styleEdit/styles/d111f128-c5b4-4da5-8701-5bb11dd5b3fe/pg_map", // Style URL
+        transformRequest: (url) => {
+          // Ensure API key is appended to requests
+          if (!url.includes("api_key")) {
+            url += url.includes("?") ? "&" : "?";
+            url += "api_key=dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ";
+          }
+          return { url };
+        }
+      });
+    });
+  </script>
+</body>
+</html>

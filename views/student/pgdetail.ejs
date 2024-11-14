@@ -1,0 +1,549 @@
+<%- include("../partials/student/navbar.ejs") %>
+
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.css" />
+<style>
+  #olaMap {
+    width: 100%;
+    height: 400px; /* Adjust height as needed */
+  }
+  .info-box {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .info-box:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .info-box h6 {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    .info-box p {
+        font-size: 1.25rem;
+        margin-top: 10px;
+    }
+    .info-box .text-muted {
+        color: #6c757d;
+    }
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5em 1em;
+        border-radius: 1.25rem;
+        font-weight: 500;
+    }
+    .description-box {
+        transition: all 0.3s ease;
+    }
+    .description-box p {
+        font-size: 1rem;
+        line-height: 1.6;
+        letter-spacing: 0.02em;
+        text-align: justify;
+    }
+    .description-box p.card-text {
+        max-height: 100px;
+        overflow: hidden;
+        position: relative;
+    }
+    .description-box p.expanded {
+        max-height: none;
+    }
+
+</style>
+
+<% if (message) { %>
+    <div class="alert alert-danger mt-4" role="alert">
+        <%= message %>
+      </div>
+    
+<% } %>
+
+
+<!-- details container section  -->
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="row g-0">
+            <!-- Image Carousel -->
+            <div class="col-md-4 my-2">
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="<%= listing.main_image %>" class="d-block w-100" alt="PG Image" style="height: 400px; object-fit: cover;">
+                        </div>
+                        <% for (let i = 0; i < listing.images.length; i++) { %>
+                            <div class="carousel-item">
+                                <img src="<%= listing.images[i] %>" class="d-block w-100" alt="PG Image" style="height: 400px; object-fit: cover;">
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="col-md-8">
+                <div class="card-body">
+                   
+                    
+                    <!-- Room Type, Rent Type, Food Availability Sections with Dynamic Colors -->
+                    <div class="d-flex flex-wrap mb-3">
+                        <h5 class="card-title mx-2"><%= listing.pg_name %></h5>
+                        <div class="badge rounded-pill bg-primary me-2 mb-2 p-2 text-white">
+                            <strong>Room:</strong> <%= listing.room_type %>
+                        </div>
+                        <div class="badge rounded-pill bg-warning me-2 mb-2 p-2 text-dark">
+                            <strong>Rent Type:</strong> <%= listing.rent_type %>
+                        </div>
+                        <div class="badge rounded-pill bg-success mb-2 p-2 text-white">
+                            <% if (listing.food_availabilty === true) { %>
+                                <strong>With Food:</strong> <%= listing.food_type %>
+                            <% } else { %>
+                                <strong>Food Availability:</strong> Not Available
+                            <% } %>
+                        </div>
+                    </div>
+                    
+                 
+                    <div class="description-box p-3 border rounded bg-light">
+                        <p class="card-text text-dark" id="descriptionText">
+                            <%= listing.description %>
+                        </p>
+                    </div>
+                    
+                    <!-- Details Section -->
+                   <!-- Enhanced Details Section -->
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <!-- Deposit, Price, and Electric Charge -->
+            <div class="row mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Deposit Amount</h6>
+                        <p class="h5 text-dark">₹ <%= listing.deposit_amount %></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Price</h6>
+                        <p class="h4 text-danger font-weight-bold">₹ <%= listing.price_per_month %> <small class="text-muted">/ Month</small></p>
+                        <% if (listing.price_per_month <= 5000) { %>
+                            <span class="badge bg-success text-white">Affordable</span>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Electric Charge</h6>
+                        <p class="h5 text-dark">₹ <%= listing.electric_charge %> / unit</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance, Notice Period, and Preferred Tenants -->
+            <div class="row mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Maintenance</h6>
+                        <p class="h5 text-dark">₹ <%= listing.maintenance_fee %></p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Notice Period</h6>
+                        <p class="h5 text-dark"><%= listing.notice_period %> Month(s)</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="info-box p-3 border rounded bg-light">
+                        <h6 class="text-muted">Preferred Tenants</h6>
+                        <p class="h5 text-dark">
+                            <% if (listing.preferred_tenants === "Students") { %>
+                                Students
+                            <% } else if (listing.preferred_tenants === "Working Professionals") { %>
+                                Working Professionals
+                            <% } else if (listing.preferred_tenants === "Both") { %>
+                                Students and Working Professionals
+                            <% } %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<strong>Amenities:</strong>
+<div class="d-flex flex-wrap mx-2 my-2">
+    <% Object.entries(listing.amenities).forEach(([key, value]) => { %>
+        <% if (value === "true") { %>
+            <span class="badge bg-success rounded-pill me-2 my-2" data-bs-toggle="tooltip" title="<%= key %>">
+                <i class="bi bi-check-circle"></i> <%= key %>
+            </span>
+        <% } %>
+    <% }); %>
+</div>
+
+<!-- Tooltip Initialization -->
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
+
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <a href="/pg/user/booking/form/<%= listing.id %>">
+                                <button type="button" class="btn btn-danger">
+                                    <i class="bi bi-bookmark-check me-2"></i> Book Now
+                                </button>
+                            </a>
+                            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#phoneModal">
+                                <i class="bi bi-phone me-2"></i> View Phone No.
+                            </button>
+                        </div>
+                        <a class="btn btn-outline-secondary" onclick="openOnMap('<%= listing.latitude %>', '<%= listing.longitude %>')">
+                            <i class="bi bi-map"></i> View on Map
+                        </a>
+                    </div>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="phoneModal" tabindex="-1" aria-labelledby="phoneModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="phoneModalLabel">Contact Owner</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Name:</strong> <%= listing.owner_name %></p>
+                                            <p><strong>Phone Number:</strong> <%= listing.phone_number %></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Alternate Phone Number:</strong> <%= listing.alternate_phone_number %></p>
+                                            <p><strong>Email:</strong> <%= listing.email %></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- crousel image  -->
+<div class="container my-4 rounded ">
+    <div id="carouselExampleIndicators" class="carousel slide " data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <% listing.images.forEach((imageUrl, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                    <img src="<%= imageUrl %>" class="d-block w-100" alt="PG Image" style="height: 400px; object-fit: cover; ">
+                </div>
+            <% }); %>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+
+<!-- amenities details  -->
+
+
+<div class="container mt-4 rounded">
+    <!-- Amenities Card -->
+    <div class="card p-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Amenities</h5>
+        </div>
+       <div class="card-body">
+    <div class="row">
+        <div class="col-3 mb-3">
+            <h6><i class="bi bi-wifi"  style="font-size: 2.5rem;"></i></h6>
+            <h7 style="font-size: 1rem;" >WiFi</h7>
+            <p class="text-muted"><%= listing.amenities.WiFi === "true"  ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><i class="bi bi-fan" style="font-size: 2.5rem;" ></i></h6>
+            <h7 style="font-size: 1rem;" >Air Conditioning</h7>
+            <p class="text-muted"><%= listing.amenities.AC === "true" ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><img src="/assets/svg/laundry-svgrepo-com.svg" alt="Laundry Icon" width="42" ></h6>
+            <h7 style="font-size: 1rem;" >Laundary</h7>
+            <p class="text-muted"><%= listing.amenities.Laundry === "true" ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><img src="/assets/svg/drinking-water-svgrepo-com.svg" alt="Laundry Icon" width="42" ></h6>
+            <h7 style="font-size: 1rem;" >Drinking Water</h7>
+            <p class="text-muted"><%= listing.amenities.DrinkingWater === "true" ? "Available" : "Not Available" %></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 mb-3">
+            <h6><i class="bi bi-p-circle-fill" style="font-size: 2.5rem;"  ></i></h6>
+            <h7 style="font-size: 1rem;" >Parking</h7>
+            <p class="text-muted"><%= listing.amenities.Parking === "true" ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><img src="/assets/svg/gym-svgrepo-com.svg" alt="Laundry Icon" width="42" >
+            </h6>
+            <h7 style="font-size: 1rem;" >Gym</h7>
+            <p class="text-muted"><%= listing.amenities.Gym === "true" ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><img src="/assets/svg/kitchen-svgrepo-com.svg" alt="Laundry Icon" width="42" ></h6>
+            <h7 style="font-size: 1rem;" >Power Backup</h7>
+            <p class="text-muted"><%= listing.amenities.PowerBackup === "true" ? "Available" : "Not Available" %></p>
+        </div>
+        <div class="col-3 mb-3">
+            <h6><img src="/assets/svg/drinking-water-svgrepo-com.svg" alt="Laundry Icon" width="42" ></h6>
+            <h7 style="font-size: 1rem;" >Drinking Water</h7>
+            <p class="text-muted"><%= listing.amenities.DrinkingWater === "true" ? "Available" : "Not Available" %></p>
+        </div>
+    </div>
+    <div class="row">
+       <!-- you can add more  -->
+        
+    </div>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<!-- housing rule  -->
+<div class="container mt-4">
+    <div class="card p-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Housing Rules</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                
+                <div class="col-3 mb-3">
+                    <h6>Gate Closing Time</h6>
+                    <h6><img src="/assets/svg/door-close-svgrepo-com.svg" alt="Gate Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Gate Closing time') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Gate Closing time') ? 'Gate Closing Time' : 'No Gate Closing Time' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Visitor Allowed</h6>
+                    <h6><img src="/assets/svg/new-visitor-svgrepo-com.svg" alt="Gate Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Visitors Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Visitors Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Non-Veg Food</h6>
+                    <h6><img src="/assets/svg/chicken-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Non-Veg Food Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Non-Veg Food Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Opposite Gender</h6>
+                    <h6><img src="/assets/svg/gender-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Opposite Gender Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Opposite Gender Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Smoking</h6>
+                    <h6><img src="/assets/svg/smoking-mark-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Smoking Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Smoking Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Alchohol</h6>
+                    <h6><img src="/assets/svg/alcohol-beer-drink-glass-hand-mug-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Drinking Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Drinking Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Loud Music</h6>
+                    <h6><img src="/assets/svg/loud-woofer-box-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Loud Music Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Loud Music Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+                <div class="col-3 mb-3">
+                    <h6>Party</h6>
+                    <h6><img src="/assets/svg/party-fun-dance-enjoy-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Party Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Party Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+
+                <div class="col-3 mb-3">
+                    <h6>Pets</h6>
+                    <h6><img src="/assets/svg/pets-svgrepo-com.svg" alt="non veg Icon" width="48" ></h6>
+                    <p class="text-muted">
+                        <i  
+                           class="<%= listing.custom_rule && listing.custom_rule.includes('Pet Allowed') ? 'bi bi-check-circle-fill text-success' : 'bi bi-x-circle-fill text-danger' %>"></i>
+                        <%= listing.custom_rule && listing.custom_rule.includes('Pet Allowed') ? 'Allowed' : 'Not Allowed' %>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    
+<!-- map section  -->
+<div class="container my-4">
+    <h5>Location Map</h5>
+    <div id="olaMap"></div>
+</div>
+
+
+<div class="container my-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Nearby Locations</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Universities</h6>
+                            <p class="card-text"><%= listing.nearby_universities %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Organizations</h6>
+                            <p class="card-text"><%= listing.nearby_organizations %></p>
+                        </div>
+                    </div>
+                </div>
+                <% listing.nearby_locations.forEach(element => { %>
+                    <div class="col-md-4 mb-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Location</h6>
+                                <p class="card-text"><%= element %></p>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- <h1>PG Details: <%= listing.name %></h1>
+    <p><strong>Address:</strong> <%= listing.address %></p>
+    <p><strong>City:</strong> <%= listing.city %></p>
+    <p><strong>Price per month:</strong> <%= listing.price_per_month %></p>
+    <p><strong>Amenities:</strong></p>
+    <ul>
+        <% for (let amenity in listing.amenities) { %>
+            <li><%= amenity %>: <%= listing.amenities[amenity] %></li>
+        <% } %>
+    </ul>
+
+    <!-- Button to View on Google Maps -->
+    <!-- <button onclick="openOnMap('<%= listing.latitude %>', '<%= listing.longitude %>')">View on Map</button> -->
+
+    <%- include("../partials/footer.ejs") %> -->
+
+    
+    
+    <script src="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.js"></script>
+    <script>
+        // Function to open the PG location on Google Maps
+        function openOnMap(latitude, longitude) {
+            const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            window.open(googleMapsUrl, "_blank");
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+      const map = new maplibregl.Map({
+        container: "olaMap", // The div ID where the map will render
+        center: [<%= listing.longitude %>, <%= listing.latitude %>], // Map center coordinates passed from EJS
+        zoom: 14, // Initial zoom level
+        style: "https://api.olamaps.io/styleEditor/v1/styleEdit/styles/d111f128-c5b4-4da5-8701-5bb11dd5b3fe/pg_map",
+        transformRequest: (url, resourceType) => {
+          // Append the API key to the URL
+          url = url.replace("app.olamaps.io", "api.olamaps.io");
+          if (url.includes("?")) {
+            url += "&api_key=dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ";
+          } else {
+            url += "?api_key=dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ";
+          }
+          return { url };
+        },
+      });
+
+      // Add zoom and rotation controls to the map
+      map.addControl(new maplibregl.NavigationControl(), "top-left");
+
+      // Add a marker at the specified coordinates
+      new maplibregl.Marker().setLngLat([<%= listing.longitude %>, <%= listing.latitude %>]).addTo(map);
+    });
+        
+
+    </script>
+

@@ -1,0 +1,85 @@
+<%- include("../partials/navbar.ejs") %>
+
+<!-- Page Background -->
+<style>
+    body {
+        /* background: linear-gradient(135deg, #7b2cbf, #9d4edd); */
+        font-family: 'Arial', sans-serif;
+    }
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #6c2eb9;
+        color: #fff;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .form-label {
+        font-weight: 500;
+    }
+    .btn-primary {
+        background-color: #ffffff;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #fbff00;
+    }
+    .card-footer a {
+        color: #6c2eb9;
+    }
+    .card-footer a:hover {
+        color: #532e91;
+        text-decoration: underline;
+    }
+</style>
+
+<!-- Alert Message -->
+<div class="container mt-5">
+    <% if (message) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= message %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% } %>
+</div>
+
+<!-- Login Card -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Login</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-center text-muted">Your credentials are safe with us. We do not share them with third-party apps.</p>
+                    <form action="/auth/login/student" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Don't have an account? <a href="/auth/page/register/student">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../partials/footer.ejs") %>

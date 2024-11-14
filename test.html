@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Ola Maps Integration</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.css" />
+  <style>
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const map = new maplibregl.Map({
+        container: "map", // The div ID where the map will render
+        center: [77.5353394, 16.03106], // Map center coordinates
+        zoom: 14, // Initial zoom level
+        style: "https://api.olamaps.io/styleEditor/v1/styleEdit/styles/d111f128-c5b4-4da5-8701-5bb11dd5b3fe/pg_map",
+        transformRequest: (url, resourceType) => {
+          // Append the API key to the URL
+          url = url.replace("app.olamaps.io", "api.olamaps.io");
+          if (url.includes("?")) {
+            url += "&api_key=dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ";
+          } else {
+            url += "?api_key=dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ";
+          }
+          return { url };
+        },
+      });
+
+      // Add zoom and rotation controls to the map
+      map.addControl(new maplibregl.NavigationControl(), "top-left");
+
+      // Add a marker at the specified coordinates
+      new maplibregl.Marker().setLngLat([77.5353394, 16.03106]).addTo(map);
+    });
+  </script>
+</body>
+</html>

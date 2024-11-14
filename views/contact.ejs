@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Home - PG Finder</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="70" tabindex="0">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">PG Finder</a>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">Contact</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Services
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Post A Property</a></li>
+              <li><a class="dropdown-item" href="#">Manage Booking</a></li>
+              <li><a class="dropdown-item" href="#">Manage Ownership</a></li>
+              <li><a class="dropdown-item" href="#">Help me</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/auth/page/login/owner">Admin Login/Register</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="d-flex">
+        <a href="/auth/page/login/student" class="btn btn-outline-primary me-2">Login</a>
+        <a href="/auth/page/register/owner" class="btn btn-primary">Register</a>
+      </div>
+    </div>
+  </nav>
+
+  
+
+  <!-- About Section -->
+  <div id="about" class="card mb-4 w-100" style="min-height: 300px; margin-top: 80px;">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+          <h2 class="card-title mb-3">About Our PG Accommodation Finder</h2>
+          <p class="card-text">
+              Welcome to our PG Finder platform! We aim to make finding and booking Paying Guest accommodations seamless and convenient. 
+              Whether you're a student, working professional, or someone seeking a comfortable stay, our platform connects you with a variety of PG options 
+              tailored to meet your unique needs. Our mission is to help you find a home away from home with ease.
+          </p>
+          <p class="card-text">
+              Explore a wide range of accommodations, each equipped with amenities like Wi-Fi, meals, laundry services, and more. 
+              Enjoy a hassle-free experience as you compare options and make the best choice with just a few clicks.
+          </p>
+          <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#requirementModal">
+              <i class="bi bi-chat-fill mx-2"></i>Share Requirement
+          </button>
+      </div>
+  </div>
+
+  <!-- How to Use Section -->
+  <div class="card mb-4 w-100" style="min-height: 300px;">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+          <h2 class="card-title mb-3">How to Use Our Platform</h2>
+          <p class="card-text">
+              To unlock all features, please <a href="/auth/page/login/student">login</a> or <a href="/auth/page/register/student">register</a>.
+              Once you're logged in, you can explore a variety of PG accommodations, apply filters to find the best match based on 
+              location, price, and amenities, and book your preferred option in minutes. 
+          </p>
+          <p class="card-text">
+              Our user-friendly interface guides you through every step, from browsing listings to completing your booking. 
+              Start your search today and discover your ideal accommodation with ease!
+          </p>
+      </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div id="contact" class="container my-5">
+      <div class="row">
+          <div class="col-md-5 mb-4">
+              <h3>About Us</h3>
+              <p>Welcome to our PG Finder platform! We're here to help you find comfortable, convenient accommodations that meet your needs. Reach out to us through our social media or email, and we'll be happy to assist.</p>
+              <h5>Contact Information</h5>
+              <p><strong>Email:</strong> contact@pgfinder.com</p>
+              <p><strong>Phone:</strong> +1 234 567 890</p>
+              <h5>Follow Us</h5>
+              <p>
+                  <a href="https://facebook.com" class="text-decoration-none me-3"><i class="bi bi-facebook"></i> Facebook</a>
+                  <a href="https://twitter.com" class="text-decoration-none me-3"><i class="bi bi-twitter"></i> Twitter</a>
+                  <a href="https://instagram.com" class="text-decoration-none"><i class="bi bi-instagram"></i> Instagram</a>
+              </p>
+          </div>
+          <div class="col-md-7">
+              <h3>Contact Us</h3>
+              <form id="contactForm" action="/submit-contact" method="POST">
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="name" name="name" required>
+                      <div class="invalid-feedback">Please enter your name.</div>
+                  </div>
+                  
+                  <div class="mb-3">
+                      <label for="email" class="form-label">Email Address</label>
+                      <input type="email" class="form-control" id="email" name="email" required>
+                      <div class="invalid-feedback">Please enter a valid email address.</div>
+                  </div>
+                  
+                  <div class="mb-3">
+                      <label for="subject" class="form-label">Subject</label>
+                      <input type="text" class="form-control" id="subject" name="subject" required>
+                      <div class="invalid-feedback">Please enter the subject of your message.</div>
+                  </div>
+                  
+                  <div class="mb-3">
+                      <label for="message" class="form-label">Message</label>
+                      <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                      <div class="invalid-feedback">Please enter your message.</div>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-primary">Send Message</button>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <%- include("./partials/footer.ejs") %>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

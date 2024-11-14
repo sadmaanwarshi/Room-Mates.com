@@ -1,0 +1,259 @@
+<%- include("../partials/student/navbar.ejs") %>
+
+<!-- top card layout  -->
+
+<div class="container my-5">
+    <div class="card mb-3 shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+                <div class="text-center">
+                    <h5 class="text-muted">Price</h5>
+                    <p class="text-primary"><strong><%= pg.price_per_month %></strong>/Month</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><%= pg.pgname %></h5>
+                    <p class="card-text text-muted">At: <%= pg.city %></p>
+                    <p class="card-text text-muted"><small>posted on:</small></p>
+                    <p class="card-text text-muted"><small><%= pg.created_at %></small></p>
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
+                <a href="/pg/user/fetch/pgdetail/<%= pg.id %>" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- gallery  -->
+
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <h2 class="text-center my-4">PG Gallery</h2>
+        <div class="row">
+            <% pg.images.slice(0, 3).forEach((imageUrl) => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0">
+                        <img src="<%= imageUrl %>" class="card-img-top" alt="PG Image" style="height: 250px; object-fit: cover;" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    
+    <% if (pg.images.length > 3) { %>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#galleryModal">View All Images</button>
+    <% } %>
+
+    <!-- Modal -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="galleryModalLabel">PG Gallery</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <% pg.images.forEach((imageUrl) => { %>
+                            <div class="col-md-4 mb-3">
+                                <img src="<%= imageUrl %>" class="img-fluid" alt="PG Image" style="height: 250px; object-fit: cover;">
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (message) { %>
+    <script>
+        alert("<%= message %>");
+    </script>
+<% } %>
+
+
+<!-- Booking form  -->
+<div class="container">
+<form class="row g-3 needs-validation mb-4" action="/pg/user/book/pg/<%= pg.id %>" method="POST" novalidate>
+    <div class="col-md-4">
+        <label for="validationCustom01" class="form-label">First name</label>
+        <input type="text" class="form-control" id="validationCustom01" name="fullName" placeholder="<%= user.firstname %>"required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="validationCustom02" class="form-label">Last name</label>
+        <input type="text" class="form-control" id="validationCustom02" placeholder="<%= user.lastname %>" required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="validationCustomUsername" class="form-label">Father's Name</label>
+        <input type="text" class="form-control" id="validationCustomUsername" name="fatherName" required>
+        <div class="invalid-feedback">
+            Please provide a valid father's name.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom03" class="form-label">Address</label>
+        <input type="text" class="form-control" id="validationCustom03" name="address" required>
+        <div class="invalid-feedback">
+            Please provide a valid address.
+        </div>
+    </div>
+
+    <!-- state  -->
+    <div class="col-md-3">
+        <label for="validationCustom04" class="form-label">State</label>
+        <select class="form-select" id="validationCustom04" name="state" required>
+            <option selected disabled value="">Choose...</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Goa">Goa</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Manipur">Manipur</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Mizoram">Mizoram</option>
+            <option value="Nagaland">Nagaland</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Tripura">Tripura</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+            <option value="Chandigarh">Chandigarh</option>
+            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+            <option value="Ladakh">Ladakh</option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Puducherry">Puducherry</option>
+        </select>
+        <div class="invalid-feedback">
+            Please select a valid state.
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <label for="validationCustom05" class="form-label">City</label>
+        <input type="text" class="form-control" id="validationCustom05" name="city" required>
+        <div class="invalid-feedback">
+            Please provide a valid city.
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label for="pincode" class="form-label">Pincode</label>
+        <input type="text" class="form-control" id="pincode" name="pincode" required>
+        <div class="invalid-feedback">
+            Please provide a valid pincode.
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label for="policeStation" class="form-label">Police Station</label>
+        <input type="text" class="form-control" id="policeStation" name="policeStation" required>
+        <div class="invalid-feedback">
+            Please provide a valid police station.
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label for="block" class="form-label">Block</label>
+        <input type="text" class="form-control" id="block" name="Block" required>
+        <div class="invalid-feedback">
+            Please provide a valid block.
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <label for="university" class="form-label">University Name:</label>
+        <input type="text" class="form-control" id="university" name="university" placeholder="<%= user.university %>" required>
+        <div class="invalid-feedback">
+            Please provide a valid university name.
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="course" class="form-label">Course:</label>
+        <input type="text" class="form-control" id="course" name="course" placeholder="<%= user.program %>" required>
+        <div class="invalid-feedback">
+            Please provide a valid course name.
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="duration" class="form-label">Duration of Course:</label>
+        <select class="form-select" id="duration" name="duration"  required>
+            <option selected disabled value="">Choose...</option>
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+            <option value="6">6 Years</option>
+            <option value="7">7 Years</option>
+            <option value="8">8 Years</option>
+        </select>
+        <div class="invalid-feedback">
+            Please select a valid duration.
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="room" class="form-label">No of <%= pg.rent_type %>:</label>
+        <select class="form-select" id="room" name="rentType" required>
+            <option selected disabled value="">Choose...</option>
+            <option value="1">1 <%= pg.rent_type %></option>
+            <option value="2">2 <%= pg.rent_type %></option>
+            <option value="3">3 <%= pg.rent_type %></option>
+            <option value="4">4 <%= pg.rent_type %></option>
+            <option value="5">5 <%= pg.rent_type %></option>
+            
+        </select>
+        <div class="invalid-feedback">
+            Please select a valid number of rooms.
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label for="checkIn" class="form-label">Check-In Date:</label>
+        <input type="date" class="form-control" id="checkIn" name="checkIn" required>
+        <div class="invalid-feedback">
+            Please select a check-in date.
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-check-label" for="invalidCheck">
+                Agree to terms and conditions
+            </label>
+            <div class="invalid-feedback">
+                You must agree before submitting.
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Book Now</button>
+    </div>
+</form>
+</div>
+  
+<%- include("../partials/footer.ejs") %>
+
+
