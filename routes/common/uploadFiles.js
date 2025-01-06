@@ -4,15 +4,18 @@ import fs from 'fs';
 import pg from "pg";
 import cloudinary from '../config/cloudinaryConfig.js';
 import upload from '../config/multerLocalConfig.js';
+import dotenv from 'dotenv';
+
+dotenv.config(); 
 
 const router = express.Router();
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "paying-guest-db",
-  password: "Sad@7562",
-  port: 5432
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 db.connect();

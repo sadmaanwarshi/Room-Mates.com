@@ -1,9 +1,126 @@
 <%- include("../partials/owner/navbar.ejs") %>
 
+<style>
+    /* General Form Styles */
+form {
+    /* max-width: 80%; */
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Headings */
+/* h5 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+} */
+
+/* Form Controls */
+.form-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    color: #555;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Focus and Hover Effects */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+.form-control:hover {
+    border-color: #007bff;
+}
+
+/* Invalid Input */
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* Column Layout and Spacing */
+.col-md-6 {
+    margin-bottom: 20px;
+}
+
+.col-12 {
+    margin-bottom: 30px;
+}
+
+/* Buttons (for submit or other actions) */
+ /* .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+} */
+
+/* .btn:hover {
+    background-color: #0056b3;
+} */
+
+/* Custom Styling for Checkboxes */
+.form-check-input {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Input File Styles */
+input[type="file"] {
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    .col-md-6 {
+        width: 100%;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    h5 {
+        font-size: 1.25rem;
+    }
+}
+
+</style>
 <div class="container mt-5">
     <h2>Create PG Listing</h2>
     <form class="needs-validation" action="/pg/owner/add" method="POST" enctype="multipart/form-data" novalidate>
         <div class="row g-3">
+
+            <div class="col-12">
+                <h5>Accomadation Information</h5>
+                <hr>
+            </div>
             <div class="col-md-6">
                 <label for="Name" class="form-label">Name</label>
                 <input type="text" class="form-control" name="ownerName" id="Name" required>
@@ -14,6 +131,30 @@
                 <label for="pgName" class="form-label">PG Name</label>
                 <input type="text" class="form-control" name="pgName" id="pgName" required>
                 <div class="invalid-feedback">Please enter the PG name.</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="phoneNumber" class="form-label">Phone Numbe(+91)</label>
+                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="altPhoneNumber" class="form-label">Alternate Phone Number(+91)</label>
+                <input type="tel" class="form-control" id="altPhoneNumber" name="alterPhoneNumber" pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            </div>
+
+             <!-- description  -->
+             <div class="col-md-8">
+                <label for="description" class="form-label">Description<span>(Please write properly it will shown on Top)</span></label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+            </div>
+
+            <div class="col-12">
+                <h5>Address Details</h5>
+                <hr>
             </div>
 
             <div class="col-md-6">
@@ -47,130 +188,100 @@
               </div>
 
               <!-- Button to Get Location -->
-<div class="col-md-12 my-3">
-    <button type="button" class="btn btn-primary" onclick="getLocation()">Get My Location</button>
-</div>
+        <div class="col-md-12 my-3">
+         <button type="button" class="btn btn-primary" onclick="getLocation()">Get My Location</button>
+        </div>
 
-            <div class="col-md-4">
-                <label for="phoneNumber" class="form-label">Phone Numbe(+91)</label>
-                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required pattern="^\d{10}$">
-                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+
+        <div class="col-12">
+            <h5>Nearby Location Details</h5>
+            <hr>
+        </div>
+
+             <!-- naerby location section  -->
+             <div class="col-md-6">
+                <label for="nearbyUniversities" class="form-label">Nearby Target Universities</label>
+                <input type="text" class="form-control" name="nearbyUniversities" id="nearbyUniversities" required>
+                <div class="invalid-feedback">Please enter nearby universities.</div>
             </div>
 
-            <div class="col-md-4">
-                <label for="altPhoneNumber" class="form-label">Alternate Phone Number(+91)</label>
-                <input type="tel" class="form-control" id="altPhoneNumber" name="alterPhoneNumber" pattern="^\d{10}$">
-                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+            <div class="col-md-6">
+                <label for="nearbyOrganizations" class="form-label">Nearby Target Organizations</label>
+                <input type="text" class="form-control" name="nearbyOrganizations" id="nearbyOrganizations" required>
+                <div class="invalid-feedback">Please enter nearby organizations.</div>
             </div>
 
+            <div class="col-md-12">
+                <label for="nearbyLocations" class="form-label">Nearby Locations</label>
+                <input type="text" class="form-control" name="nearbyLocations" id="nearbyLocations" required>
+                <div class="invalid-feedback">Please enter nearby locations.</div>
+            </div>
+        </div>
+
+        <!-- pricing section  -->
+        <div class="col-12 mt-4">
+            <h5 class="mb-3">Pricing Details</h5>
+            <hr>
+        </div>
+        
+        <div class="row g-3">
+            <!-- Price per Month -->
             <div class="col-md-4">
                 <label for="pricePerMonth" class="form-label">Price per Month</label>
-                <input type="number" class="form-control" name="priceMonthly" id="pricePerMonth" required>
-                <span class="input-group-text">₹</span>
-                <div class="invalid-feedback">Please enter the price.</div>
+                <div class="input-group">
+                    <span class="input-group-text">₹</span>
+                    <input type="number" class="form-control" name="priceMonthly" id="pricePerMonth" required>
+                    <div class="invalid-feedback">Please enter the price.</div>
+                </div>
             </div>
-
+        
+            <!-- Deposit Amount -->
             <div class="col-md-4">
                 <label for="depositAmount" class="form-label">Deposit Amount</label>
-                <input type="number" class="form-control" name="depositAmount" id="depositAmount" required>
-                <div class="invalid-feedback">Please enter the deposit amount.</div>
+                <div class="input-group">
+                    <span class="input-group-text">₹</span>
+                    <input type="number" class="form-control" name="depositAmount" id="depositAmount" required>
+                    <div class="invalid-feedback">Please enter the deposit amount.</div>
+                </div>
             </div>
-
+        
+            <!-- Electric Charge -->
             <div class="col-md-4">
                 <label for="electricCharge" class="form-label">Electric Charge</label>
-                <input type="number" class="form-control" name="electricCharge" id="electricCharge" required>
-                <span class="input-group-text"> / Unit</span>
-                <div class="invalid-feedback">Please enter the electric charge.</div>
+                <div class="input-group">
+                    <input type="number" class="form-control" name="electricCharge" id="electricCharge" required>
+                    <span class="input-group-text">/ Unit</span>
+                    <div class="invalid-feedback">Please enter the electric charge.</div>
+                </div>
             </div>
-
+        
+            <!-- Maintenance Fee -->
             <div class="col-md-4">
                 <label for="maintenance" class="form-label">Maintenance Fee</label>
-                <input type="number" class="form-control" name="maintenanceCharge" id="maintenance" required>
-                <div class="invalid-feedback">Please enter the maintenance fee.</div>
+                <div class="input-group">
+                    <span class="input-group-text">₹</span>
+                    <input type="number" class="form-control" name="maintenanceCharge" id="maintenance" required>
+                    <div class="invalid-feedback">Please enter the maintenance fee.</div>
+                </div>
             </div>
-
+        
+            <!-- Notice Period -->
             <div class="col-md-4">
                 <label for="noticePeriod" class="form-label">Notice Period (in days)</label>
                 <input type="number" class="form-control" name="noticePeriod" id="noticePeriod" required>
                 <div class="invalid-feedback">Please enter the notice period.</div>
             </div>
+        </div>
+        
+        
 
-            <!-- Food availabilty  -->
-            <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Food Available (Include price in Price Per Month)</label>
-                <select class="form-select" name="foodAvailability" id="validationCustom04" required>
-                  <option selected disabled value="">Choose...</option>
-                  <option>Yes</option>
-                  <option>No</option>
-                  
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid food selection.
-                </div>
-              </div>
-
-              <!-- food type  -->
-              <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Food Type</label>
-                <select class="form-select" name="foodType" id="validationCustom04" required>
-                  <option selected disabled value="">Choose...</option>
-                  <option>Veg</option>
-                  <option>Non veg</option>
-                  <option>Not Available</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid food selection.
-                </div>
-              </div>
-
-              <!-- description  -->
-              <div class="col-md-8">
-                <label for="description" class="form-label">Description<span>(Please write properly it will shown on Top)</span></label>
-                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                <div class="invalid-feedback">Please enter a description.</div>
-            </div>
-
-              <!-- Amenenties section  -->
-            <div class="col-md-12">
-                <label class="form-label">Amenities</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="AC" name="amenities" id="ac">
-                    <label class="form-check-label" for="ac">AC</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="WiFi" name="amenities" id="wifi">
-                    <label class="form-check-label" for="wifi">WIFI</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="DrinkingWater" name="amenities" id="drinkingWater">
-                    <label class="form-check-label" for="drinkingWater">Drinking Water</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="Laundry" name="amenities" id="laundry">
-                    <label class="form-check-label" for="laundry">Laundry</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="Parking" name="amenities" id="parking">
-                    <label class="form-check-label" for="parking">Parking</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="Gym" name="amenities" id="gym">
-                    <label class="form-check-label" for="gym">Gym</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="Bed" name="amenities" id="bed">
-                    <label class="form-check-label" for="bed">Bed</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="PowerBackup" name="amenities" id="power">
-                    <label class="form-check-label" for="power">Power Backup</label>
-                </div>
-                
-            </div>
-
-
+        <div class="col-12 mt-4">
+            <h5>Accomadation Details</h5>
+            <hr>
+        </div>
+        <div class="row g-3">
             <!-- prefered tenants  -->
-            <div class="col-md-4">
+            <div class=" col-md-4">
                 <label for="preferredTenants" class="form-label">Preferred Tenants</label>
                 <select class="form-select" name="tenants" id="preferredTenants" required>
                     <option selected disabled value="">Choose...</option>
@@ -182,7 +293,7 @@
             </div>
 
             <!-- prefered gender  -->
-            <div class="col-md-4">
+            <div class=" col-md-4">
                 <label for="preferredFor" class="form-label">Preferred For</label>
                 <select class="form-select" name="preferredGender" id="preferredFor" required>
                     <option selected disabled value="">Choose...</option>
@@ -195,7 +306,7 @@
             
             <!-- rent type  -->
             
-            <div class="mb-3">
+            <div class="col-md-4">
                 <label for="rentType" class="form-label">Rent Type</label>
                 <select class="form-select" name="rentType" id="rentType" required>
                     <option selected disabled value="">Choose Rent Type...</option>
@@ -213,6 +324,8 @@
             
                 <!-- For Single Room Type-->
                 <div class="mb-3" id="numberOfRooms" style="display: none;">
+                    <div class="row g-3">
+                <div class="class col-md-6">
                     <label for="roomsSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="roomsSelect">
                         <option selected disabled value="">Choose Rooms Type...</option>
@@ -220,8 +333,9 @@
                         <option value="Double Bed Room">Double Bed Room</option>
                         <option value="Triple Bed Room">Triple Bed Room</option>
                     </select>
-                    
+                </div>
                     <!-- Quantity Room  -->
+                    <div class="class col-md-6">
                     <label for="roomsSelect" class="form-label">Number of Rooms</label>
                     <select class="form-select" name="quantity" id="roomsSelect">
                         <option selected disabled value="">Choose Number of Rooms...</option>
@@ -235,9 +349,13 @@
                     </select>
                     <div class="invalid-feedback">Please select the number of rooms.</div>
                 </div>
+            </div>
+            </div>
             
                 <!-- Sharing ROOM  -->
                 <div class="mb-3" id="numberOfBeds" style="display: none;">
+                    <div class="row g-3">
+                    <div class="col-md-6">
                     <label for="bedsSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="bedsSelect">
                         <option selected disabled value="">Choose Room Type...</option>
@@ -246,8 +364,9 @@
                         <option value="Triple Sharing Room">Triple Sharing Room</option>
                         <option value="Four Sharing Room">Four Sharing Room</option>
                     </select>
-
+                </div>
                     <!-- Number of Beds Dropdown -->
+                     <div class="col-md-6">
                     <label for="bedsSelect" class="form-label">Beds Available</label>
                     <select class="form-select" name="quantity" id="bedsSelect">
                         <option selected disabled value="">Choose No of Beds Available...</option>
@@ -260,12 +379,15 @@
                         <option value="7">7 Bed</option>
                         <option value="8">8 Bed</option>
                     </select>
-
+                </div>
                     <div class="invalid-feedback">Please select the number of beds.</div>
+                </div>
                 </div>
             
                 <!-- BHK Dropdown -->
                 <div class="mb-3" id="bhk" style="display: none;">
+                    <div class="row g-3">
+                    <div class="col-md-6">
                     <label for="bhkSelect" class="form-label">BHK</label>
                     <select class="form-select" name="quantity" id="bhkSelect">
                         <option selected disabled value="">Choose BHK...</option>
@@ -277,8 +399,9 @@
                         <option value="6">6 BHK</option>
                         <option value="7">7 BHK</option>
                     </select>
-
+                </div>
                     <!-- BHK room Type  -->
+                     <div class="col-md-6">
                     <label for="bhkSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="bhkSelect">
                         <option selected disabled value="">Room Type</option>
@@ -287,11 +410,15 @@
                         <option value="Triple Sharing Room">Triple Sharing Room</option>
                         <option value="Four Sharing Room">Four Sharing Room</option>
                     </select>
+                </div>
                     <div class="invalid-feedback">Please select BHK.</div>
+                </div>
                 </div>
             
                 <!-- Number of Stories Dropdown -->
                 <div class="mb-3" id="storiesOfHouse" style="display: none;">
+                    <div class="row g-3">
+                    <div class="col-md-6">
                     <label for="storiesSelect" class="form-label">Number of Stories</label>
                     <select class="form-select" name="quantity" id="storiesSelect">
                         <option selected disabled value="">Choose Number of Stories...</option>
@@ -301,7 +428,9 @@
                         <option value="4">4 floors</option>
                         <option value="5">5 floors</option>
                     </select>
+                </div>
 
+                    <div class="col-md-6">
                     <label for="storiesSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="storiesSelect">
                         <option selected disabled value="">Choose Number of Stories...</option>
@@ -314,149 +443,284 @@
                         <option value="6 BHK">6 BHK</option>
                         <option value="7 BHK">7 BHK</option>
                     </select>
+                </div>
                     <div class="invalid-feedback">Please select the number of stories.</div>
                 </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-12">
+                <h5>Food Availability Details</h5>
+                <hr>
             </div>
             
-            <!-- Restriction type  -->
-            <div class="col-md-4">
-                <label for="preferredFor" class="form-label">Restriction Type</label>
-                <select class="form-select" name="restrictionType" id="restrictiontype" required>
-                    <option selected disabled value="">Choose...</option>
-                    <option>Restriction</option>
-                    <option>Partial Restriction</option>
-                    <option>Non Restriction</option>
+            <div class="row g-3">
+            <!-- Food availabilty  -->
+            <div class="col-md-6">
+                <label for="validationCustom04" class="form-label">Food Available (Include price in Price Per Month)</label>
+                <select class="form-select" name="foodAvailability" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  
                 </select>
-                <div class="invalid-feedback">Please select a preference.</div>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
+
+              <!-- food type  -->
+              <div class="col-md-6">
+                <label for="validationCustom04" class="form-label">Food Type</label>
+                <select class="form-select" name="foodType" id="validationCustom04" required>
+                  <option selected disabled value="">Choose...</option>
+                  <option>Veg</option>
+                  <option>Non veg</option>
+                  <option>Not Available</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid food selection.
+                </div>
+              </div>
             </div>
 
-            <!-- rules and regulation  -->
-            <div class="col-md-12">
-                <label for="rulesAndRegulations" class="form-label">Rules and Regulations <spann>(Please Check box If Allowed)</spann></label>
-                
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="Smoking">
-                    <label class="form-check-label" for="Smoking">Gate Closing time</label>
-                </div>
-                
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg">
-                    <label class="form-check-label" for="nonveg">Non Veg Food</label>
-                </div>
+            <!-- Amenities -->
+<div class="col-12 mt-4">
+    <h5>Facilities Details</h5>
+    <hr>
+</div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="Smoking">
-                    <label class="form-check-label" for="Smoking">Smoking</label>
-                </div>
+<div class="row g-3"> <!-- Row to wrap the amenities checkboxes -->
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alchohol">
-                    <label class="form-check-label" for="alchohol">Alchohol</label>
-                </div>
-                
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="Pets">
-                    <label class="form-check-label" for="noPets">Pets</label>
-                </div>
-                
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed">
-                    <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
-                </div>
-                
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="quietHours">
-                    <label class="form-check-label" for="loudmusic">Loud Music</label>
-                </div>
+    <!-- Amenity 1 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="AC" name="amenities" id="ac">
+            <label class="form-check-label" for="ac">AC</label>
+        </div>
+    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositegender">
-                    <label class="form-check-label" for="oppositegender">Opposite Gender</label>
-                </div>
+    <!-- Amenity 2 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="WiFi" name="amenities" id="wifi">
+            <label class="form-check-label" for="wifi">WiFi</label>
+        </div>
+    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party">
-                    <label class="form-check-label" for="party">Party</label>
-                </div>
+    <!-- Amenity 3 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="DrinkingWater" name="amenities" id="drinkingWater">
+            <label class="form-check-label" for="drinkingWater">Drinking Water</label>
+        </div>
+    </div>
+
+    <!-- Amenity 4 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Laundry" name="amenities" id="laundry">
+            <label class="form-check-label" for="laundry">Laundry</label>
+        </div>
+    </div>
+
+    <!-- Amenity 5 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Parking" name="amenities" id="parking">
+            <label class="form-check-label" for="parking">Parking</label>
+        </div>
+    </div>
+
+    <!-- Amenity 6 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Gym" name="amenities" id="gym">
+            <label class="form-check-label" for="gym">Gym</label>
+        </div>
+    </div>
+
+    <!-- Amenity 7 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Bed" name="amenities" id="bed">
+            <label class="form-check-label" for="bed">Bed</label>
+        </div>
+    </div>
+
+    <!-- Amenity 8 -->
+    <div class="col-md-4 col-12">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="PowerBackup" name="amenities" id="power">
+            <label class="form-check-label" for="power">Power Backup</label>
+        </div>
+    </div>
+
+</div> <!-- End of row -->
+
+<!-- Rules and Regulation -->
+<div class="col-12 mt-4">
+    <h5>Rules and Regulation</h5>
+    <hr>
+</div>
+
+<!-- Restriction Type -->
+<div class="col-md-4">
+    <label for="restrictiontype" class="form-label">Restriction Type</label>
+    <select class="form-select" name="restrictionType" id="restrictiontype" required>
+        <option selected disabled value="">Choose...</option>
+        <option>Restriction</option>
+        <option>Partial Restriction</option>
+        <option>Non Restriction</option>
+    </select>
+    <div class="invalid-feedback">Please select a preference.</div>
+</div>
+
+<!-- Rules and Regulations Section -->
+<div class="col-12 mt-3">
+    <label for="rulesAndRegulations" class="form-label">Rules and Regulations <span>(Please Check Box If Allowed)</span></label>
+    <div class="row g-3">
+        
+        <!-- Rule 1 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="gateClosing">
+                <label class="form-check-label" for="gateClosing">Gate Closing time</label>
+            </div>
+        </div>
+
+        <!-- Rule 2 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg">
+                <label class="form-check-label" for="nonveg">Non-Veg Food</label>
+            </div>
+        </div>
+
+        <!-- Rule 3 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="smoking">
+                <label class="form-check-label" for="smoking">Smoking</label>
+            </div>
+        </div>
+
+        <!-- Rule 4 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alcohol">
+                <label class="form-check-label" for="alcohol">Alcohol</label>
+            </div>
+        </div>
+
+        <!-- Rule 5 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="pets">
+                <label class="form-check-label" for="pets">Pets</label>
+            </div>
+        </div>
+
+        <!-- Rule 6 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed">
+                <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
+            </div>
+        </div>
+
+        <!-- Rule 7 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="loudMusic">
+                <label class="form-check-label" for="loudMusic">Loud Music</label>
+            </div>
+        </div>
+
+        <!-- Rule 8 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositeGender">
+                <label class="form-check-label" for="oppositeGender">Opposite Gender</label>
+            </div>
+        </div>
+
+        <!-- Rule 9 -->
+        <div class="col-md-4 col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party">
+                <label class="form-check-label" for="party">Party</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="invalid-feedback">Please select at least one rule or regulation.</div>
+</div>
+
             
-                <div class="invalid-feedback">Please select at least one rule or regulation.</div>
-            </div>
-            
-        <!-- naerby location section  -->
-            <div class="col-md-12">
-                <label for="nearbyUniversities" class="form-label">Nearby Target Universities</label>
-                <input type="text" class="form-control" name="nearbyUniversities" id="nearbyUniversities" required>
-                <div class="invalid-feedback">Please enter nearby universities.</div>
-            </div>
+           <!-- Image Gallery Section -->
+<div class="col-12 mt-4">
+    <h5>Image Gallery</h5>
+    <hr>
+</div>
 
-            <div class="col-md-12">
-                <label for="nearbyOrganizations" class="form-label">Nearby Target Organizations</label>
-                <input type="text" class="form-control" name="nearbyOrganizations" id="nearbyOrganizations" required>
-                <div class="invalid-feedback">Please enter nearby organizations.</div>
-            </div>
+<div class="row g-3">
+<!-- Main Image Upload -->
+<div class="col-md-6">
+    <label for="mainImage" class="form-label">Main Image Upload</label>
+    <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*" required>
+    <div class="invalid-feedback">Please upload the main image.</div>
+</div>
 
-            <div class="col-md-12">
-                <label for="nearbyLocations" class="form-label">Nearby Locations</label>
-                <input type="text" class="form-control" name="nearbyLocations" id="nearbyLocations" required>
-                <div class="invalid-feedback">Please enter nearby locations.</div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <label for="mainImage" class="form-label">Main Image Upload</label>
-            <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*" required>
-            <div class="invalid-feedback">Please upload the main image.</div>
-        </div>
-
-        <div class="col-md-6">
-            <label for="additionalImages" class="form-label">Additional Image Uploads</label>
-            <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
-        </div>
+<!-- Additional Image Uploads -->
+<div class="col-md-6">
+    <label for="additionalImages" class="form-label">Additional Image Uploads</label>
+    <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
+</div>
+</div>
         <button class="btn btn-primary mt-4" type="submit">Submit</button>
+    </div>
     </form>
 </div>
 
+<%- include("../partials/footer.ejs") %>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', () => {
     const rentType = document.getElementById('rentType');
     const conditionalFields = document.getElementById('conditionalFields');
-    const roomsSelect = document.getElementById('numberOfRooms');
-    const bedsSelect = document.getElementById('numberOfBeds');
-    const bhkSelect = document.getElementById('bhk');
-    const storiesSelect = document.getElementById('storiesOfHouse');
+    const numberOfRooms = document.getElementById('numberOfRooms');
+    const numberOfBeds = document.getElementById('numberOfBeds');
+    const bhk = document.getElementById('bhk');
+    const storiesOfHouse = document.getElementById('storiesOfHouse');
 
-    function updateConditionalFields() {
-        // Hide all conditional fields initially
-        roomsSelect.style.display = 'none';
-        bedsSelect.style.display = 'none';
-        bhkSelect.style.display = 'none';
-        storiesSelect.style.display = 'none';
+    rentType.addEventListener('change', () => {
+        conditionalFields.style.display = 'block';
 
-        // Show appropriate fields based on selected rent type
+        // Hide all initially
+        numberOfRooms.style.display = 'none';
+        numberOfBeds.style.display = 'none';
+        bhk.style.display = 'none';
+        storiesOfHouse.style.display = 'none';
+
+        // Show based on selection
         switch (rentType.value) {
-            case 'Room':
-                roomsSelect.style.display = 'block';
+            case 'Single Room':
+                numberOfRooms.style.display = 'block';
                 break;
-            case 'Bed':
-                bedsSelect.style.display = 'block';
+            case 'Sharing Room':
+                numberOfBeds.style.display = 'block';
                 break;
             case 'Flat':
-                bhkSelect.style.display = 'block';
+                bhk.style.display = 'block';
                 break;
             case 'House':
-                storiesSelect.style.display = 'block';
+                storiesOfHouse.style.display = 'block';
                 break;
         }
-
-        // Show conditional fields section if rent type is selected
-        conditionalFields.style.display = rentType.value ? 'block' : 'none';
-    }
-
-    rentType.addEventListener('change', updateConditionalFields);
-
-    // Initial call to set the fields correctly
-    updateConditionalFields();
+    });
 });
+
 
 
     // Example JavaScript for form validation

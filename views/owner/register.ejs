@@ -1,143 +1,182 @@
 <%- include("../partials/navbar.ejs") %>
+<style>
 
-<div class="container">
-<form class="row g-3 needs-validation" action="/auth/register/owner" method="POST" novalidate>
-    <!-- Business Name -->
-    <div class="col-md-6">
-      <label for="businessName" class="form-label">Business Name</label>
-      <input type="text" class="form-control" id="businessName" name="businessName" placeholder="e.g., PG Solutions" required>
-      <div class="invalid-feedback">Please enter your business name.</div>
-    </div>
+body {
+        font-family: 'Arial', sans-serif;
+        background: url('/assets/images/bg5.jpg') no-repeat center center/cover;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+  .glass-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.registration-card .form-label {
+        font-weight: bold;
+        color: #ddd;
+    }
+
+    .registration-card input.form-control {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #fff;
+        border-radius: 8px;
+    }
+
+    .registration-card input.form-control:focus {
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        border: 1px solid #fff;
+    }
     
-    <!-- Owner Name -->
-    <div class="col-md-6">
-      <label for="ownerName" class="form-label">Owner Name</label>
-      <input type="text" class="form-control" id="ownerName" name="ownerName" placeholder="e.g., John Doe" required>
-      <div class="invalid-feedback">Please enter your full name.</div>
-    </div>
-  
-    <!-- Email -->
-    <div class="col-md-6">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="e.g., owner@example.com" required>
-      <div class="invalid-feedback">Please enter a valid email address.</div>
-    </div>
-  
-    <!-- Password -->
-    <div class="col-md-6">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="********" required
-             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
-      <div class="invalid-feedback">
-        Password must be at least 8 characters, including an uppercase letter, lowercase letter, and a number.
+
+    .registration-card .btn-primary {
+        background-color: #6c2eb9;
+        border: none;
+        color: #fff;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .registration-card .btn-primary:hover {
+        background-color: #532e91;
+        box-shadow: 0 0 12px rgba(108, 46, 185, 0.8);
+    }
+
+</style>
+
+<div class="container my-5 d-flex justify-content-center align-items-center" >
+  <div class="glass-card p-4 rounded-4 shadow-lg registration-card">
+    <form class="row g-3 needs-validation" action="/auth/register/owner" method="POST" novalidate>
+      <!-- Business Name -->
+      <div class="col-md-6">
+        <label for="businessName" class="form-label">Business Name</label>
+        <input type="text" class="form-control" id="businessName" name="businessName" placeholder="e.g., PG Solutions" required>
+        <div class="invalid-feedback">Please enter your business name.</div>
       </div>
-    </div>
+      
+      <!-- Owner Name -->
+      <div class="col-md-6">
+        <label for="ownerName" class="form-label">Owner Name</label>
+        <input type="text" class="form-control" id="ownerName" name="ownerName" placeholder="e.g., John Doe" required>
+        <div class="invalid-feedback">Please enter your full name.</div>
+      </div>
     
-    <!-- date of Birth  -->
-
-    <!-- Phone Number -->
-    <div class="col-md-6">
-      <label for="phoneNumber" class="form-label">Phone Number</label>
-      <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="1234567890" required 
-             pattern="^\d{10}$">
-      <div class="invalid-feedback">Please enter a valid 10-digit phone number (e.g., 1234567890).</div>
-    </div>
+      <!-- Email -->
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="e.g., owner@example.com" required>
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+      </div>
     
-
-     <!-- License Number (Optional) -->
-  <div class="col-md-6">
-    <label for="licenseNumber" class="form-label">License Number (Optional)</label>
-    <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" placeholder="e.g., PG123456">
-    <div class="invalid-feedback">Please enter your license number if available.</div>
-  </div>
-
-    <!-- Address -->
-    <div class="col-md-8">
-      <label for="address" class="form-label">Address</label>
-      <input type="text" class="form-control" id="address" name="address" placeholder="Street Address" required>
-      <div class="invalid-feedback">Please provide your business address.</div>
-    </div>
-  
-    <!-- City -->
-    <div class="col-md-4">
-      <label for="city" class="form-label">City</label>
-      <input type="text" class="form-control" id="city" name="city" placeholder="e.g., New York" required>
-      <div class="invalid-feedback">Please enter your city.</div>
-    </div>
-  
-    <!-- State -->
-    <div class="col-md-4">
-      <label for="state" class="form-label">State</label>
-      <select class="form-select" id="state" name="state" required>
-        <option selected disabled value="">Choose...</option>
-        <option value="NY">New York</option>
-        <option value="CA">California</option>
-        <!-- Add other states as needed -->
-      </select>
-      <div class="invalid-feedback">Please select your state.</div>
-    </div>
-  
-    <!-- Pincode -->
-    <div class="col-md-4">
-      <label for="pincode" class="form-label">Pincode</label>
-      <input type="text" class="form-control" id="pincode" name="pincode" placeholder="123456" required pattern="^\d{6}$">
-      <div class="invalid-feedback">Please enter a valid 6-digit pincode.</div>
-    </div>
-  
-    <!-- Property Name -->
-    <div class="col-md-8">
-      <label for="propertyName" class="form-label">Property Name</label>
-      <input type="text" class="form-control" id="propertyName" name="propertyName" placeholder="e.g., Blue Sky PG" required>
-      <div class="invalid-feedback">Please enter the name of your property.</div>
-    </div>
-
-    <!-- Date of Birth  -->
-    <div class="col-md-4">
+      <!-- Password -->
+      <div class="col-md-6">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="********" required
+               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+        <div class="invalid-feedback">
+          Password must be at least 8 characters, including an uppercase letter, lowercase letter, and a number.
+        </div>
+      </div>
+      
+      <!-- Phone Number -->
+      <div class="col-md-6">
+        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="1234567890" required 
+               pattern="^\d{10}$">
+        <div class="invalid-feedback">Please enter a valid 10-digit phone number (e.g., 1234567890).</div>
+      </div>
+      
+      <!-- License Number (Optional) -->
+      <div class="col-md-6">
+        <label for="licenseNumber" class="form-label">License Number (Optional)</label>
+        <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" placeholder="e.g., PG123456">
+        <div class="invalid-feedback">Please enter your license number if available.</div>
+      </div>
+      
+      <!-- Address -->
+      <div class="col-md-8">
+        <label for="address" class="form-label">Address</label>
+        <input type="text" class="form-control" id="address" name="address" placeholder="Street Address" required>
+        <div class="invalid-feedback">Please provide your business address.</div>
+      </div>
+    
+      <!-- City -->
+      <div class="col-md-4">
+        <label for="city" class="form-label">City</label>
+        <input type="text" class="form-control" id="city" name="city" placeholder="e.g., New York" required>
+        <div class="invalid-feedback">Please enter your city.</div>
+      </div>
+    
+      <!-- State -->
+      <div class="col-md-4">
+        <label for="state" class="form-label">State</label>
+        <select class="form-select" id="state" name="state" required>
+          <option selected disabled value="">Choose...</option>
+          <option>West Bengal</option>
+          <option>Jharkhand</option>
+          <!-- Add other states as needed -->
+        </select>
+        <div class="invalid-feedback">Please select your state.</div>
+      </div>
+    
+      <!-- Pincode -->
+      <div class="col-md-4">
+        <label for="pincode" class="form-label">Pincode</label>
+        <input type="text" class="form-control" id="pincode" name="pincode" placeholder="123456" required pattern="^\d{6}$">
+        <div class="invalid-feedback">Please enter a valid 6-digit pincode.</div>
+      </div>
+      
+      <!-- Property Name -->
+      <div class="col-md-8">
+        <label for="propertyName" class="form-label">Property Name</label>
+        <input type="text" class="form-control" id="propertyName" name="propertyName" placeholder="e.g., Blue Sky PG" required>
+        <div class="invalid-feedback">Please enter the name of your property.</div>
+      </div>
+      
+      <!-- Date of Birth -->
+      <div class="col-md-4">
         <label for="dob" class="form-label">Date of Birth</label>
         <input type="date" class="form-control" id="dob" name="dob" required>
         <div class="invalid-feedback">Please select your date of birth.</div>
       </div>
-
-    <!-- Optional Business Description -->
-    <div class="col-md-12">
-      <label for="businessDescription" class="form-label">Business Description (Optional)</label>
-      <textarea class="form-control" id="businessDescription" name="businessDescription" rows="3"
-                placeholder="Describe your property, facilities, and services"></textarea>
-    </div>
-  
-      <!-- Note about Registration -->
-  <div class="col-12">
-    <div class="alert alert-info" role="alert">
-      Note: This is the only registration page for adding your Paying Guest (PG) room. After registration, please log in to our website and navigate to the "Add" section in your dashboard to list your PG. This process ensures that your registration is correctly linked to your account.
-    </div>
-  </div>
-
-    <!-- Terms and Conditions -->
-    <div class="col-12">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
-        <label class="form-check-label" for="terms">
-          Agree to terms and conditions
-        </label>
-        <div class="invalid-feedback">You must agree to the terms and conditions.</div>
+      
+      <!-- Optional Business Description -->
+      <div class="col-md-12">
+        <label for="businessDescription" class="form-label">Business Description (Optional)</label>
+        <textarea class="form-control" id="businessDescription" name="businessDescription" rows="3"
+                  placeholder="Describe your property, facilities, and services"></textarea>
       </div>
-    </div>
-  
-    <!-- Submit Button -->
-    <div class="col-12">
-      <button class="btn btn-primary" type="submit">Register</button>
-    </div>
-  </form>
-
+      
+      <!-- Note about Registration -->
+      <div class="col-12">
+        <div class="alert alert-info" role="alert">
+          Note: This is the only registration page for adding your Paying Guest (PG) room. After registration, please log in to our website and navigate to the "Add" section in your dashboard to list your PG. This process ensures that your registration is correctly linked to your account.
+        </div>
+      </div>
+      
+      <!-- Terms and Conditions -->
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+          <label class="form-check-label" for="terms">
+            Agree to terms and conditions
+          </label>
+          <div class="invalid-feedback">You must agree to the terms and conditions.</div>
+        </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Register</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-    <h1>Owner Registration</h1>
-    <form action="/auth/page/register/owner" method="POST">
-        <input type="text" name="name" placeholder="Name" required minlength="3">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required minlength="5">
-        <input type="text" name="phone" placeholder="Phone Number" required>
-        <input type="text" name="address" placeholder="Address" required>
-        <input type="text" name="city" placeholder="City" required>
-        <button type="submit">Register</button>
-    </form>
+<%- include("../partials/footer.ejs") %>

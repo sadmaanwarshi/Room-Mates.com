@@ -17,10 +17,20 @@ import homepage from "./routes/homepage.js";
 import viewedMap from "./routes/user/viewedMap.js";
 import booking from "./routes/user/booking.js"
 import bookingManage from "./routes/owners dashboard/bookingManage.js"
-const app = express();
-const port = 3000;
+import logout from "./routes/common/logout.js";
+import authRegister from "./routes/authRegister.js"
+import dashboard from "./routes/user/dashboard.js";
+import dotenv from 'dotenv';
 
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+app.use(express.static("public"));
 app.set('view engine', 'ejs');
+
 app.use(express.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 app.use(bodyParser.json()); // For parsing application/json (optional if you are using express.json())
@@ -29,19 +39,26 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // CORS s
 app.use(express.static('public')); // Serve static files from the 'public' directory
 
 app.use(session({
-    secret: 'TOPSECRETT',
+    secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 // session timing that ur cookies save for how much time
+    }
   }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 
+// app.use('/send', sendMail)
 
 app.use('/',homepage); //home page (index.ejs)
+app.use('/home',dashboard);
 // User function
 app.use('/auth', auth); // http://localhost:3000/auth/login/student
+app.use('/auth', authRegister); // http://localhost:3000/auth/login/student
+app.use('/', logout);
 app.use('/pg/user', fetchAllpg);  // http://localhost:3000/pg/user/fetchall
 app.use('/pg/user' , fetchByLocation);  // http://localhost:3000/pg/user/search/location
 app.use('/pg/user', filter);  // http://localhost:3000/pg/user/fetch/filter?max_price=4000

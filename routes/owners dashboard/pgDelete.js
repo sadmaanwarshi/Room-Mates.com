@@ -1,17 +1,18 @@
 import express from "express";
 import pg from "pg";
 import isAuthenticated from "../../middleware/authenticate.js";
+import dotenv from 'dotenv';
 
+dotenv.config(); 
 
 const router = express.Router();
 
-// Database connection setup
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "paying-guest-db",
-    password: "Sad@7562",
-    port: 5432
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
 
@@ -46,11 +47,15 @@ router.delete("/delete/:id", isAuthenticated, async (req, res) => {
                 deletedListing: deleteResponse.rows[0]
             });
         } else {
-            res.status(404).json({ error: "PG listing is not available or unable to delete" });
+            req.session.error = "404!  Not available or unable to delete";
+            return res.redirect(`/pg/owner/dashboard?user=${owner_id}`);
+            // res.status(404).json({ error: "PG listing is not available or unable to delete" });
         }
     } catch (err) {
         console.error('Error deleting PG listing:', err);
-        res.status(500).json({ error: 'Failed to delete PG listing.' });
+        req.session.error = "500!  Failed to delete PG listing.";
+        res.redirect(`/pg/owner/dashboard?user=${owner_id}`);
+        // res.status(500).json({ error: 'Failed to delete PG listing.' });
     }
 });
 

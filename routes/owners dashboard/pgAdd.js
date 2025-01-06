@@ -5,21 +5,24 @@ import fs from "fs";
 import isAuthenticated from "../../middleware/authenticate.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 import upload from "../../config/multerLocalConfig.js";
+import dotenv from 'dotenv';
+
+dotenv.config(); 
 
 const router = Router();
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "paying-guest-db",
-  password: "Sad@7562",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 db.connect();
 
 async function getGeocode(address) {
-  const apiKey = "dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ"; // Wrap in quotes
+  const apiKey = process.env.OLA_APIKEY; // Wrap in quotes
   const url = `https://api.olamaps.io/places/v1/geocode?address=${encodeURIComponent(
     address
   )}&language=english&api_key=${apiKey}`;
@@ -276,9 +279,11 @@ if (rules && rules.length > 0) {
       res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
     } catch (err) {
       console.error("Error inserting data into database:", err);
-      res
-        .status(500)
-        .json({ error: "Unable to insert data into the database" });
+      req.session.error = "500!  Unable to Add data into the webpage Database";
+      res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
+      // res
+      //   .status(500)
+      //   .json({ error: "Unable to insert data into the database" });
     }
   }
 );

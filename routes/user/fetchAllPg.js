@@ -1,15 +1,18 @@
 import express from "express";
 import pg from "pg";
 import isAuthenticated from "../../middleware/authenticate.js";
+import dotenv from 'dotenv';
+
+dotenv.config(); 
 
 const router = express.Router();
 
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "paying-guest-db",
-    password: "Sad@7562",
-    port: 5432
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
 db.connect();
@@ -36,6 +39,7 @@ router.get("/fetch/pgdetail/:id", isAuthenticated, async (req, res) => {
             JOIN pg_nearby_location_details ON pg_listings.id = pg_nearby_location_details.pg_id
             JOIN pg_room_info ON pg_listings.id = pg_room_info.pg_id
             JOIN pg_rules_new ON pg_listings.id = pg_rules_new.pgid
+            JOIN owners ON pg_listings.owner_id = owners.id
             WHERE pg_listings.id = $1
         `;
         const result = await db.query(query, [parseInt(id, 10)]); // Convert id to integer
@@ -45,6 +49,7 @@ router.get("/fetch/pgdetail/:id", isAuthenticated, async (req, res) => {
         }
 
         const listing = result.rows[0];
+        // console.log(listing);
         res.render("student/pgdetail", { listing, user,message });
 
     } catch (err) {

@@ -5,22 +5,24 @@ import fs from "fs";
 import isAuthenticated from "../../middleware/authenticate.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 import upload from "../../config/multerLocalConfig.js";
+import dotenv from 'dotenv';
+
+dotenv.config(); 
 
 const router = express.Router();
 
-// Database connection setup
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "paying-guest-db",
-    password: "Sad@7562",
-    port: 5432
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
 db.connect();  // Ensure you connect to the database
 
 async function getGeocode(address) {
-    const apiKey = 'dJ8jEv1ParnY4qqVrLhVwJvmy2CZfU9R0BFR73kQ'; // Wrap in quotes
+    const apiKey = process.env.OLA_APIKEY; // Wrap in quotes
     const url = `https://api.olamaps.io/places/v1/geocode?address=${encodeURIComponent(address)}&language=english&api_key=${apiKey}`;
 
     try {
@@ -219,7 +221,9 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
         res.redirect(`/pg/owner/dashboard?user=${owner_id}`);
     } catch (err) {
         console.error('Error updating PG listing:', err);
-        res.status(500).json({ error: 'Failed to update PG listing.' });
+        req.session.error = "500! Failed to update PG listing.";
+        res.redirect(`/pg/owner/dashboard?user=${owner_id}`);
+        // res.status(500).json({ error: 'Failed to update PG listing.' });
     }
 });
 

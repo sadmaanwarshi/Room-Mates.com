@@ -1,4 +1,8 @@
+<title>roommates.com - dashboard</title>
+<!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 <style>
+    
     .card {
         border-radius: 15px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -21,8 +25,8 @@
     }
 
     .btn-primary:hover {
-        background-color: #f8cdda;
-        border-color: #f8cdda;
+        background-color: #b300ff;
+        border-color: #ee00ff;
     }
 
     .modal-content {
@@ -68,163 +72,169 @@
 .badge {
     font-size: 0.9rem;
 }
+.card-internal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .card-body {
+            padding: 10px;
+        }
 
 </style>
 
 
 <%- include("../partials/student/navbar.ejs") %>
 <!-- Navbar for Search and Filter -->
-<nav class="navbar navbar-light mb-4" style="background: linear-gradient(to right, #f8cdda, #1e3c72);">
+<!-- Search Bar Section -->
+<!-- Search Bar Section -->
+<nav class="navbar navbar-light" style="background: linear-gradient(to right, #40c9ff, #e81cff); height: 60px; margin-bottom: 0;">
     <div class="container-fluid justify-content-center">
-        <!-- Search Form -->
-        <form class="d-flex mx-2" action="/pg/user/search/location" method="GET" style="flex: 1;">
-            <input class="form-control me-2 w-100" type="text" name="search" placeholder="Enter City..." aria-label="Search" style="max-width: 300px;">
-            <button class="btn btn-outline-light" type="submit">Search</button>
+        <form class="d-flex mx-auto mt-1" action="/pg/user/search/location" method="GET" style="width: 100%; height: 40px; max-width: 600px;">
+            <input class="form-control me-2 w-100" 
+                   type="text" 
+                   name="search" 
+                   placeholder="Enter City..." 
+                   aria-label="Search" 
+                   style="border-radius: 20px; padding: 10px 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <button class="btn btn-light px-4" 
+                    type="submit" 
+                    style="border-radius: 20px; font-weight: bold;">Search</button>
         </form>
-
-        <!-- Price Dropdown -->
-        <div class="ms-3">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle rounded" type="button" id="priceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Max Price
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="priceDropdown">
-                    <li>
-                        <form action="/pg/user/fetch/filter" method="GET" class="p-3">
-                            <label for="priceRange" class="form-label">Select Max Price: <span id="priceValue">10,000</span> Rs</label>
-                            <div class="d-flex align-items-center" style="width: 100%;">
-                                <span>₹ 0 </span>
-                                <input type="range" class="form-range mx-2" min="0" max="20000" step="100" id="priceRange" name="max_price" value="10000" oninput="document.getElementById('priceValue').textContent = this.value">
-                                <span>₹ 20,000</span>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2 w-100">Apply Price Filter</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Amenities Dropdown -->
-        <div class="ms-3">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle rounded" type="button" id="amenitiesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Amenities
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="amenitiesDropdown">
-                    <li>
-                        <form action="/pg/user/fetch/filter" method="GET" class="p-3">
-                            <div class="d-flex flex-wrap gap-3" style="max-width: 300px;">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="WiFi" value="true" id="wifi">
-                                    <label class="form-check-label" for="wifi">WiFi</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="Meal" value="true" id="meals">
-                                    <label class="form-check-label" for="meals">Meals</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="AC" value="true" id="AC">
-                                    <label class="form-check-label" for="AC">AC</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="DrinkingWater" value="true" id="water">
-                                    <label class="form-check-label" for="water">Drinking Water</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="Gym" value="true" id="gym">
-                                    <label class="form-check-label" for="gym">Gym</label>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2 w-100">Apply Amenities Filter</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Gender Dropdown -->
-        <div class="ms-3">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle rounded" type="button" id="genderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Gender
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="genderDropdown">
-                    <li>
-                        <form action="/pg/user/fetch/filter" method="GET" class="p-3">
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="gender" value="Boys" id="boys">
-                                <label class="form-check-label" for="boys">Boys</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="gender" value="Girls" id="girls">
-                                <label class="form-check-label" for="girls">Girls</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2 w-100">Apply Gender Filter</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Rent Type Dropdown -->
-        <div class="ms-3">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle rounded" type="button" id="rentTypeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Rent Type
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="rentTypeDropdown">
-                    <li>
-                        <form action="/pg/user/fetch/filter" method="GET" class="p-3">
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="rent_type" value="Room" id="room">
-                                <label class="form-check-label" for="room">Room</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="rent_type" value="Flat" id="flat">
-                                <label class="form-check-label" for="flat">Flat</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="rent_type" value="House" id="house">
-                                <label class="form-check-label" for="house">House</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2 w-100">Apply Rent Type Filter</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Restriction Dropdown -->
-        <div class="ms-3">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle rounded" type="button" id="restrictionTypeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Restriction Type
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="restrictionTypeDropdown">
-                    <li>
-                        <form action="/pg/user/fetch/filter" method="GET" class="p-3">
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="restrictionType" value="Restriction" id="restricted">
-                                <label class="form-check-label" for="restricted">Restriction</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" name="restrictionType" value="nonRestriction" id="nonrestricted">
-                                <label class="form-check-label" for="nonrestricted">Non Restriction</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-2 w-100">Apply Restriction Filter</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
     </div>
 </nav>
+
+<!-- Filter Bar Section -->
+<!-- < -->
+
+
+
+<!-- Filter Bar Section -->
+<nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background: linear-gradient(to right, #40c9ff, #e81cff)">
+    <div class="container-fluid justify-content-center flex-wrap gap-3">
+        <form action="/pg/user/fetch/filter" method="GET" class="d-flex flex-wrap gap-3 align-items-center">
+            <!-- Price Range -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle rounded-pill px-4" type="button" id="priceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Max Price
+                </button>
+                <ul class="dropdown-menu p-3" aria-labelledby="priceDropdown" style="min-width: 250px;">
+                    <label for="priceInput" class="form-label">Enter Max Price (₹):</label>
+                    <input type="number" class="form-control" name="max_price" id="priceInput" placeholder="e.g., 10000" min="0" max="20000" step="100">
+                </ul>
+            </div>
+
+            <!-- Amenities -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle rounded-pill px-4" type="button" id="amenitiesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Amenities
+                </button>
+                <ul class="dropdown-menu p-3" aria-labelledby="amenitiesDropdown" style="min-width: 300px;">
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="amenities[]" value="WiFi" id="wifi">
+                            <label class="form-check-label" for="wifi">
+                                <i class="bi bi-wifi"></i> WiFi
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="amenities[]" value="Meal" id="meals">
+                            <label class="form-check-label" for="meals">
+                                <i class="bi bi-egg-fried"></i> Meals
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="amenities[]" value="AC" id="AC">
+                            <label class="form-check-label" for="AC">
+                                <i class="bi bi-snow"></i> AC
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="amenities[]" value="Gym" id="gym">
+                            <label class="form-check-label" for="gym">
+                                <i class="bi bi-dumbbell"></i> Gym
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="amenities[]" value="Laundry" id="laundry">
+                            <label class="form-check-label" for="laundry">
+                                <i class="bi bi-basket"></i> Laundry
+                            </label>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+
+            <!-- Gender -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle rounded-pill px-4" type="button" id="genderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Gender
+                </button>
+                <ul class="dropdown-menu p-3" aria-labelledby="genderDropdown" style="min-width: 200px;">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="gender" value="Boys" id="boys">
+                        <label class="form-check-label" for="boys">Boys</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="gender" value="Girls" id="girls">
+                        <label class="form-check-label" for="girls">Girls</label>
+                    </div>
+                </ul>
+            </div>
+
+            <!-- Rent Type -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle rounded-pill px-4" type="button" id="rentTypeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Rent Type
+                </button>
+                <ul class="dropdown-menu p-3" aria-labelledby="rentTypeDropdown" style="min-width: 200px;">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="rent_type" value="Single Room" id="room">
+                        <label class="form-check-label" for="room">Single Room</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="rent_type" value="Flat" id="flat">
+                        <label class="form-check-label" for="flat">Flat</label>
+                    </div>
+                </ul>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="btn btn-primary rounded-pill px-4">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+
+
+
+
 
         
 
 <!-- Main card container -->
 <div class="container my-3">
     
+    <% if (message) { %>
+        <div class="alert alert-primary mt-4 d-flex justify-content-center align-items-center" role="alert" 
+             style="background: linear-gradient(to right, #40c9ff, #e81cff); color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p class="m-1 text-center" style="font-size: 1.2rem; font-weight: 500;">
+                <%= message %>
+            </p>
+        </div>
+    <% } %>
+    
+    <% if (error) { %>
+        <div class="alert alert-danger mt-4 d-flex justify-content-center align-items-center" role="alert" 
+             style="background: linear-gradient(to right, #ff4b1f, #ff9068); color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <p class="m-1 text-center" style="font-size: 1.2rem; font-weight: 500;">
+                <%= error %>
+            </p>
+        </div>
+    <% } %>
+
   <!-- PG Card -->
 <div class="card shadow-lg rounded-3 mb-4">
     <div class="card-body">
@@ -239,6 +249,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- Modal: Share Your Requirement -->
 <div class="modal fade" id="requirementModal" tabindex="-1" aria-labelledby="requirementModalLabel" aria-hidden="true">
@@ -292,102 +304,180 @@
 <!-- Custom Styles -->
 
 
-    <% if (message) { %>
-        <div class="alert alert-primary mt-4" role="alert">
-            <%= message %>
-          </div>
-        
-    <% } %>
 
-    <% if (error) { %>
-        <div class="alert alert-danger" role="alert">
-            <%= error %>
-          </div>
 
-    <% } %>
 
-    <!-- Display PG Listings -->
     <% if (listings && listings.length > 0) { %>
         <div class="row justify-content-center">
             <% listings.forEach(function(pg) { %>
-                <div class="col-md-12 mb-4">
-                    <div class="card mx-auto" style="width: 90%; max-width: 800px;">
+                
+                <div class="col-md-12 mb-3">
+                   
+                    <div class="card card-internal mx-auto shadow-sm" style="width: 90%; max-width: 800px; border-radius: 12px; transition: transform 0.3s; padding: 10px;">
                         <div class="row g-0">
+                            <!-- Image Section -->
                             <div class="col-md-4">
-                                <!-- Adjusted Image Size -->
-                                <img class="m-2" src="<%= pg.main_image %>" alt="<%= pg.pg_name %>" style="object-fit: cover; width: 100%; height: 250px;">
-                                
+                                <img src="<%= pg.main_image %>" alt="<%= pg.pg_name %>" style="object-fit: cover; width: 100%; height: 220px; border-radius: 12px 0 0 12px;">
                             </div>
                             
+                            <!-- Content Section -->
                             <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="bi bi-currency-rupee"></i><%= pg.price_per_month %> / Month
-                                        <span class="text-muted"><%= pg.rent_type %></span> <span class="text-muted"><%= pg.room_type %></span>
-                                        <h6 class="text-muted">
-                                            <% if (pg.food_availabilty === true) { %>
-                                                With Food <span> <%= pg.food_type %></span>
-                                                <span><% if(pg.amenities.Bed === "true"){ %>
-                                                    BED
-                                                    <% } %>
-                                                </span>
+                                <div class="card-body p-2">
+                                    <!-- Header Section: Price, Rent, Room Type, Food Availability -->
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h5 class="card-title" style="font-size: 1.1rem;">
+                                            <i class="bi bi-currency-rupee"></i><%= pg.price_per_month %> / Month
+                                        </h5>
+                                        
+                                        <% if (pg.food_availabilty) { %>
+                                            <span class="badge bg-success" style="font-size: 0.8rem;">
+                                                <i class="bi bi-check-circle"></i> Included Food
+                                            </span>
+                                        <% }else{ %>
+                                            <span class="badge bg-danger" style="font-size: 0.8rem;">
+                                                <i class="bi bi-x-circle"></i> Not-Included Food
+                                            </span>
                                             <% } %>
-                                        </h6>
-                                    </h5>
-                                    <div class="card">
-                                        <p class="card-text m-2">
-                                            <strong>Name:</strong> <%= pg.pg_name %>  <br>
-                                            <strong>Address:</strong> <%= pg.address %> <%= pg.city %> <i class="bi bi-geo-alt-fill"></i> <br>
-                                            <strong>Description:</strong> 
-                                            <%= pg.description.split(' ').slice(0, 20).join(' ') %>...
-                                            <a href="/pg/user/fetch/pgdetail/<%= pg.id %>">Read more</a><br>
-                                            <strong>Amenities:</strong>
-                                            <div class="d-flex flex-wrap mx-2">
-                                                <% Object.entries(pg.amenities).forEach(([key, value]) => { %>
-                                                    <% if (value === "true") { %>
-                                                        <span class="badge bg-success me-2"><%= key %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-end text-muted" style="font-size: 0.85rem;">
+
+                                        <span class="p-1 mx-2 bg-light border"><%= pg.rent_type %></span>
+                                        <span class="p-1 bg-light border"><%= pg.room_type %> <i class="bi bi-lightbulb"></i></span>
+                                    </div>
+    
+                                    <!-- PG Details: Name, Address, Description -->
+                                    <div class="card mt-2">
+                                    <div class="m-2" style="font-size: 0.9rem;">
+                                        <p class="m-0"><strong>Name:</strong> <%= pg.pg_name %></p>
+                                        <p class="m-0"><strong>Address:</strong> <%= pg.address %>, <%= pg.city %> <i class="bi bi-geo-alt-fill"></i></p>
+                                        <p class="mt-2"><strong>Description:</strong> <%= pg.description.split(' ').slice(0, 20).join(' ') %>...
+                                            <a href="/pg/user/fetch/pgdetail/<%= pg.id %>" style="font-size: 0.85rem;">Read more</a>
+                                        </p>
+                                        <p class="m-0"><strong>Available For:</strong> 
+                                            <% if (pg.preferred_gender === "Boys") { %>
+                                                BOYS
+                                            <% }else if (pg.preferred_gender === "Both"){ %>
+                                                BOYS and Girls Both
+                                                <% }else{ %>
+                                                    Girls
                                                     <% } %>
-                                                <% }); %>
-                                            </div>
                                         </p>
                                     </div>
-                
-                                    <div class="mt-3">
-                                        <a href="/pg/user/fetch/pgdetail/<%= pg.id %>">
-                                            <button type="button" class="btn btn-primary mx-2">View Details</button>
-                                        </a>
-                                        <a href="/pg/user/booking/form/<%= pg.id %>">
-                                            <button type="button" class="btn btn-danger">Book Now</button>
-                                        </a>
+                                </div>
+                                    <!-- Amenities Section -->
+                                    <div class="mt-2">
+                                        <strong>Amenities:</strong>
+                                        <div class="d-flex flex-wrap" style="font-size: 0.8rem;">
+                                            <% Object.entries(pg.amenities).forEach(([key, value]) => { %>
+                                                <% if (value === "true") { %>
+                                                    <span class="badge bg-primary me-1"><%= key %></span>
+                                                <% } %>
+                                            <% }); %>
+                                        </div>
                                     </div>
-                
+    
                                     <!-- Nearby Locations Section -->
                                     <div class="mt-2">
-                                        <div class="row gx-1">
-                                            <% pg.nearby_locations.forEach(rule => { %>
-                                                <div class="col-auto">
-                                                    <i class="bi bi-geo-alt-fill" style="font-size: 0.8rem;"></i>
-                                                    <span class="small" style="font-size: 0.75rem;"><%= rule %></span>
-                                                </div>
+                                        <strong>Nearby:</strong>
+                                        <div class="d-flex flex-wrap">
+                                            <% pg.nearby_locations.forEach(location => { %>
+                                                <span class="badge bg-secondary me-1" style="font-size: 0.75rem;">
+                                                    <i class="bi bi-geo-alt-fill"></i> <%= location %>
+                                                </span>
                                             <% }) %>
                                         </div>
+                                    </div>
+    
+                                    <!-- Action Buttons -->
+                                    <div class="mt-2 d-flex">
+                                        <a href="/pg/user/fetch/pgdetail/<%= pg.id %>" class="btn btn-primary btn-sm me-2">View Details</a>
+                                        <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#bookingModal-<%= pg.id %>">Book Now</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="bookingModal-<%= pg.id %>" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content shadow">
+                            <!-- Modal Header -->
+                            <div class="modal-header" style="background: linear-gradient(to right, #40c9ff, #e81cff);">
+                                <h5 class="modal-title text-white" id="bookingModalLabel">Book Your Stay</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <form class="row g-4 needs-validation" action="/pg/user/book/pg/<%= pg.id %>" method="POST" novalidate>
+                                    <!-- Stay Duration -->
+                                    <div class="col-md-6">
+                                        <label for="leaseYear" class="form-label">How Many Months Do You Want to Stay?</label>
+                                        <input type="number" class="form-control" id="leaseYear" name="leaseYear" placeholder="Enter duration in months" min="1" max="36" required>
+                                        <div class="invalid-feedback">Please specify the duration of your stay.</div>
+                                    </div>
+                
+                                    <!-- Number of Rooms -->
+                                    <div class="col-md-6">
+                                        <label for="roomsRequested" class="form-label">Number of <%= pg.rent_type %></label>
+                                        <select class="form-select" id="roomsRequested" name="roomsRequested" required>
+                                            <option selected disabled value="">Choose...</option>
+                                            <option value="1">1 <%= pg.rent_type %></option>
+                                            <option value="2">2 <%= pg.rent_type %></option>
+                                            <option value="3">3 <%= pg.rent_type %></option>
+                                            <option value="4">4 <%= pg.rent_type %></option>
+                                            <option value="5">5 <%= pg.rent_type %></option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select the number of rooms.</div>
+                                    </div>
+                
+                                    <!-- Check-In Date -->
+                                    <div class="col-md-6">
+                                        <label for="checkIn" class="form-label">Check-In Date</label>
+                                        <input type="date" class="form-control" id="checkIn" name="checkIn" required>
+                                        <div class="invalid-feedback">Please provide a check-in date.</div>
+                                    </div>
+                
+                                    <!-- Terms and Agreement -->
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                            <label class="form-check-label" for="agreeTerms">
+                                                I agree to the <a href="/terms" class="text-primary text-decoration-none">terms and conditions</a>.
+                                            </label>
+                                            <div class="invalid-feedback">You must agree to the terms before submitting.</div>
+                                        </div>
+                                    </div>
+                
+                                    <!-- Submit Button -->
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-primary w-50" type="submit">Confirm Booking</button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 
             <% }); %>
         </div>
-
-    <% } else if (listings && listings.length === 0) { %>
-        <p>No PG listings found.</p>
+    <% } else { %>
+        <!-- <p>No accommodations found. Try searching by city.</p> -->
     <% } %>
+
+    
+
+<!-- end of container -->
 </div>
 
-
-<%- include("../partials/student/footer.ejs") %>
+<%- include("../partials/footer.ejs") %>
 <!-- JavaScript to handle the button click and open Google Maps -->
 <script>
     async function openOnMap(pgId) {

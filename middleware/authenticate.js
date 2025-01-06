@@ -3,7 +3,9 @@ const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next(); // User is authenticated, proceed to the next middleware/route
     }
-    return res.status(401).json({ message: "You need to log in to access this resource." });
+    req.session.message = "Log In To Use This Resource";
+    return res.redirect('/auth/page/login/student')
+    // return res.status(401).json({ message: "You need to log in to access this resource." });
 };
 
 export default isAuthenticated;

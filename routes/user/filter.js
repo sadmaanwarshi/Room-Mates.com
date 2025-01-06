@@ -1,14 +1,18 @@
 import  express,{ Router }  from "express";
 import pg from "pg";
 import isAuthenticated from "../../middleware/authenticate.js";
+import dotenv from 'dotenv';
+
+dotenv.config(); 
+
 const router = express.Router();
 
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "paying-guest-db",
-    password: "Sad@7562",
-    port: 5432
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
 db.connect();
@@ -23,10 +27,12 @@ router.get("/fetch/filter", isAuthenticated, async (req, res) => {
     }
 
     let query = `
-        SELECT pg_listings.*, pg_room_info.*, pg_cost_details.price_per_month, pg_cost_details.food_availabilty 
+        SELECT *
         FROM pg_listings 
-        JOIN pg_room_info ON pg_listings.id = pg_room_info.pg_id
         JOIN pg_cost_details ON pg_listings.id = pg_cost_details.pg_id
+        JOIN pg_nearby_location_details ON pg_listings.id = pg_nearby_location_details.pg_id
+        JOIN pg_room_info ON pg_listings.id = pg_room_info.pg_id
+        JOIN pg_rules_new ON pg_listings.id = pg_rules_new.pgid
         WHERE LOWER(pg_listings.city) = LOWER($1)
     `;
     let queryParams = [city];

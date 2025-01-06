@@ -1,172 +1,175 @@
 <%- include("../partials/owner/navbar.ejs") %>
 
-<div class="container mt-5">
+<style>
+    /* Additional form styling */
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .form-container {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+    }
+
+    .btn-submit {
+        background-color: #28a745;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 18px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+    }
+</style>
+
+
+<div class="container mt-5 form-container">
     <h2>Create PG Listing</h2>
     <form class="needs-validation" action="/pg/owner/update/<%= listing.id %>" method="POST" enctype="multipart/form-data" novalidate>
-        <div class="row g-3">
+        <div class="row g-4">
+            <!-- Owner and PG Name -->
             <div class="col-md-6">
-                <label for="Name" class="form-label">Name</label>
-                <input type="text" class="form-control" name="ownerName" value="<%= listing.owner_name %>" id="Name" >
-                <div class="invalid-feedback">Please enter your name.</div>
+                <label for="Name" class="form-label">Owner Name</label>
+                <input type="text" class="form-control" name="ownerName" value="<%= listing.owner_name %>" id="Name" required>
+                <div class="invalid-feedback">Please enter the owner name.</div>
             </div>
-
             <div class="col-md-6">
                 <label for="pgName" class="form-label">PG Name</label>
-                <input type="text" class="form-control" name="pgName" value="<%= listing.pg_name %>" id="pgName" >
+                <input type="text" class="form-control" name="pgName" value="<%= listing.pg_name %>" id="pgName" required>
                 <div class="invalid-feedback">Please enter the PG name.</div>
             </div>
-
-            <div class="col-md-6">
+    
+            <!-- Address Details -->
+            <div class="col-md-8">
                 <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" name="address" value="<%= listing.address %>" id="address" >
+                <input type="text" class="form-control" name="address" value="<%= listing.address %>" id="address" required>
                 <div class="invalid-feedback">Please enter the address.</div>
             </div>
-
             <div class="col-md-4">
                 <label for="city" class="form-label">City</label>
-                <input type="text" class="form-control" name="city" value="<%= listing.city %>" id="city" >
+                <input type="text" class="form-control" name="city" value="<%= listing.city %>" id="city" required>
                 <div class="invalid-feedback">Please enter the city.</div>
             </div>
 
-            <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">State</label>
-                <select class="form-select" name="state"  id="validationCustom04" >
-                  <option selected disabled value=""><%= listing.state %></option>
-                  <option>West Bengal</option>
-                  <option>Jharkhand</option>
+            <!-- state  -->
+            <div class="col-md-4">
+                <label for="state" class="form-label">State</label>
+                <select class="form-select" name="state" id="state" required>
+                    <option disabled value="">Select State</option>
+                    <!-- Set the state dynamically here -->
+                    <option value="West Bengal" <% if (listing.state === "West Bengal") { %> selected <% } %>>West Bengal</option>
+                    <option value="Jharkhand" <% if (listing.state === "Jharkhand") { %> selected <% } %>>Jharkhand</option>
+                    <!-- Add more states as needed, setting selected dynamically -->
                 </select>
-                <div class="invalid-feedback">
-                  Please select a valid state.
-                </div>
-              </div>
-
+                <div class="invalid-feedback">Please select a valid state.</div>
+            </div>
+            
+    
+            <!-- Contact Information -->
             <div class="col-md-4">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= listing.phone_number %>"  pattern="^\d{10}$">
-                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+                <input type="tel" class="form-control" name="phoneNumber" value="<%= listing.phone_number %>" id="phoneNumber" pattern="^\d{10}$" required>
+                <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
             </div>
-
             <div class="col-md-4">
                 <label for="altPhoneNumber" class="form-label">Alternate Phone Number</label>
-                <input type="tel" class="form-control" id="altPhoneNumber" name="alterPhoneNumber" value="<%= listing.alternate_phone_number %>" pattern="^\d{10}$">
-                <div class="invalid-feedback">Please enter a valid phone number (10 digits).</div>
+                <input type="tel" class="form-control" name="alterPhoneNumber" value="<%= listing.alternate_phone_number %>" id="altPhoneNumber" pattern="^\d{10}$">
+                <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
             </div>
-
+    
+            <!-- Pricing and Charges -->
             <div class="col-md-4">
                 <label for="pricePerMonth" class="form-label">Price per Month</label>
-                <input type="number" class="form-control" name="priceMonthly" value="<%= listing.price_per_month %>" id="pricePerMonth" >
+                <input type="number" class="form-control" name="priceMonthly" value="<%= listing.price_per_month %>" id="pricePerMonth" required>
                 <div class="invalid-feedback">Please enter the price.</div>
             </div>
-
             <div class="col-md-4">
                 <label for="depositAmount" class="form-label">Deposit Amount</label>
-                <input type="number" class="form-control" name="depositAmount" value="<%= listing.deposit_amount %>" id="depositAmount" >
+                <input type="number" class="form-control" name="depositAmount" value="<%= listing.deposit_amount %>" id="depositAmount">
                 <div class="invalid-feedback">Please enter the deposit amount.</div>
             </div>
-
             <div class="col-md-4">
                 <label for="electricCharge" class="form-label">Electric Charge</label>
-                <div class="input-group has-validation">
-                    <input type="number" class="form-control" name="electricCharge"  value="<%= listing.electric_charge %>"  id="electricCharge" >
-                    <span class="input-group-text"> / unit</span>
-                    <div class="invalid-feedback">
-                        Please enter the electric charge.
-                    </div>
+                <div class="input-group">
+                    <input type="number" class="form-control" name="electricCharge" value="<%= listing.electric_charge %>" id="electricCharge">
+                    <span class="input-group-text">/ unit</span>
+                    <div class="invalid-feedback">Please enter the electric charge.</div>
                 </div>
             </div>
-
             <div class="col-md-4">
                 <label for="maintenance" class="form-label">Maintenance Fee</label>
-                <input type="number" class="form-control" name="maintenanceCharge"  value="<%= listing.maintenance_fee %>" id="maintenance" >
+                <input type="number" class="form-control" name="maintenanceCharge" value="<%= listing.maintenance_fee %>" id="maintenance">
                 <div class="invalid-feedback">Please enter the maintenance fee.</div>
             </div>
-
             <div class="col-md-4">
-                <label for="noticePeriod" class="form-label">Notice Period (in days)</label>
-                <input type="number" class="form-control" name="noticePeriod"  value="<%= listing.notice_period %>" id="noticePeriod" >
+                <label for="noticePeriod" class="form-label">Notice Period (days)</label>
+                <input type="number" class="form-control" name="noticePeriod" value="<%= listing.notice_period %>" id="noticePeriod">
                 <div class="invalid-feedback">Please enter the notice period.</div>
             </div>
-
-            <!-- Food availabilty  -->
-            <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Food Available (Include price in Price Per Month)</label>
-                <select class="form-select" name="foodAvailability" id="validationCustom04" >
-                    <option selected disabled value="">Select availability</option>
-                    <option value="yes" <% if (listing.food_availibility === true) { %> selected <% } %>>Yes</option>
-                    <option value="no" <% if (listing.food_availibility === false) { %> selected <% } %>>No</option>
-                    <option value="not_available">Not Available</option>
+    
+            <!-- Food Availability and Type -->
+            <div class="col-md-4">
+                <label for="foodAvailability" class="form-label">Food Availability</label>
+                <select class="form-select" name="foodAvailability" id="foodAvailability">
+                    <option disabled value="">Select availability</option>
+                    <option value="yes" <% if (listing.food_availibility) { %> selected <% } %>>Yes</option>
+                    <option value="no" <% if (!listing.food_availibility) { %> selected <% } %>>No</option>
                 </select>
-                <div class="invalid-feedback">
-                  Please select a valid food selection.
-                </div>
-              </div>
-
-              <!-- food type  -->
-              <div class="col-md-3">
-                <label for="validationCustom04" class="form-label">Food Type</label>
-                <select class="form-select" name="foodType" id="validationCustom04" >
-                  <option selected disabled value=""><%= listing.food_type %></option>
-                  <option>Veg</option>
-                  <option>Non veg</option>
-                  <option>Not Available</option>
+                <div class="invalid-feedback">Please select food availability.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="foodType" class="form-label">Food Type</label>
+                <select class="form-select" name="foodType" id="foodType">
+                    <option selected disabled value=""><%= listing.food_type %></option>
+                    <option>Veg</option>
+                    <option>Non-veg</option>
                 </select>
-                <div class="invalid-feedback">
-                  Please select a valid food selection.
-                </div>
-              </div>
-
-              <!-- description  -->
-              <div class="col-md-8">
-                <label for="description" class="form-label">Description<span>(Please write properly it will shown on Top)</span></label>
-                <textarea class="form-control" id="description" name="description" rows="3" ><%= listing.description %></textarea>
+                <div class="invalid-feedback">Please select food type.</div>
+            </div>
+    
+            <!-- Description -->
+            <div class="col-md-8">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required><%= listing.description %></textarea>
                 <div class="invalid-feedback">Please enter a description.</div>
             </div>
+    
+            <!-- Amenities -->
 
-             <!-- Amenities section  -->
-<div class="col-md-12">
-    <label class="form-label">Amenities</label>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="AC" name="amenities" id="ac" 
-            <% if (listing.amenities.AC === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="ac">AC</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="WiFi" name="amenities" id="wifi" 
-            <% if (listing.amenities.WiFi === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="wifi">WiFi</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="DrinkingWater" name="amenities" id="drinkingWater" 
-            <% if (listing.amenities.DrinkingWater === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="drinkingWater">Drinking Water</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Laundry" name="amenities" id="laundry" 
-            <% if (listing.amenities.Laundry === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="laundry">Laundry</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Parking" name="amenities" id="parking" 
-            <% if (listing.amenities.Parking === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="parking">Parking</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Gym" name="amenities" id="gym" 
-            <% if (listing.amenities.Gym === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="gym">Gym</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Pool" name="amenities" id="pool" 
-            <% if (listing.amenities.Pool === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="pool">Pool</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Meal" name="amenities" id="meal" 
-            <% if (listing.amenities.Meal === 'true') { %> checked <% } %> >
-        <label class="form-check-label" for="meal">Meal</label>
-    </div>
-</div>
-
+            <div class="col-md-12 mt-4 p-4 card">
+                <label class="form-label">Amenities</label>
+                <div class="row">
+                    <% const amenities = ['AC', 'WiFi', 'DrinkingWater', 'Laundry', 'Parking', 'Gym', 'Pool', 'Meal']; %>
+                    <% amenities.forEach(function(amenity) { %>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="<%= amenity %>" name="amenities" id="<%= amenity %>" 
+                                    <% if (listing.amenities[amenity] === 'true') { %> checked <% } %> >
+                                <label class="form-check-label" for="<%= amenity %>"><%= amenity %></label>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
 
             <!-- prefered tenants  -->
             <div class="col-md-4">
@@ -194,7 +197,7 @@
             
             <!-- rent type  -->
             
-            <div class="mb-3">
+            <div class="col-md-4">
                 <label for="rentType" class="form-label">Rent Type</label>
                 <select class="form-select" name="rentType" id="rentType">
                     <option selected disabled value=""><%= listing.rent_type %></option>
@@ -211,7 +214,7 @@
                 <h5>Details for Selected Rent Type</h5>
             
                 <!-- Number of Rooms Dropdown -->
-                <div class="mb-3" id="numberOfRooms" style="display: none;">
+                <div class="col-md-6" id="numberOfRooms" style="display: none;">
                     <label for="roomsSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="roomsSelect">
                         <option selected disabled value="">Choose Rooms Type...</option>
@@ -235,7 +238,7 @@
                 </div>
             
                 <!-- Number of Beds Dropdown -->
-                <div class="mb-3" id="numberOfBeds" style="display: none;">
+                <div class="col-md-6"  id="numberOfBeds" style="display: none;">
                     <label for="bedsSelect" class="form-label">Room Type</label>
                     <select class="form-select" name="roomType" id="bedsSelect">
                         <option selected disabled value="">Choose Room Type...</option>
@@ -262,7 +265,7 @@
                 </div>
             
                 <!-- BHK Dropdown -->
-                <div class="mb-3" id="bhk" style="display: none;">
+                <div class="col-md-6"  id="bhk" style="display: none;">
                     <label for="bhkSelect" class="form-label">BHK</label>
                     <select class="form-select" name="quantity" id="bhkSelect">
                         <option selected disabled value="">Choose BHK...</option>
@@ -287,7 +290,7 @@
                 </div>
             
                 <!-- Number of Stories Dropdown -->
-                <div class="mb-3" id="storiesOfHouse" style="display: none;">
+                <div class="col-md-6"  id="storiesOfHouse" style="display: none;">
                     <label for="storiesSelect" class="form-label">Number of Stories</label>
                     <select class="form-select" name="quantity" id="storiesSelect">
                         <option selected disabled value="">Choose Number of Stories...</option>
@@ -315,100 +318,100 @@
             </div>
             
 
-            <!-- rules and regulation  -->
             <div class="col-md-12">
                 <label for="rulesAndRegulations" class="form-label">Rules and Regulations <span>(Please Check box If Allowed)</span></label>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="gateClosing" 
-                        <% if (listing.custom_rule.includes("Gate Closing time")) { %> checked <% } %> >
-                    <label class="form-check-label" for="gateClosing">Gate Closing time</label>
+                <div class="row">
+                    <!-- Each col-md-4 will hold 3 checkboxes per row, adjust according to preference -->
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Gate Closing time" id="gateClosing" 
+                                <% if (listing.custom_rule.includes("Gate Closing time")) { %> checked <% } %> >
+                            <label class="form-check-label" for="gateClosing">Gate Closing time</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg" 
+                                <% if (listing.custom_rule.includes("Non-Veg Food Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="nonveg">Non-Veg Food Allowed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="smoking" 
+                                <% if (listing.custom_rule.includes("Smoking Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="smoking">Smoking Allowed</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alcohol" 
+                                <% if (listing.custom_rule.includes("Drinking Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="alcohol">Drinking Allowed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="pets" 
+                                <% if (listing.custom_rule.includes("Pet Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="pets">Pet Allowed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed" 
+                                <% if (listing.custom_rule.includes("Visitors Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="loudmusic" 
+                                <% if (listing.custom_rule.includes("Loud Music Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="loudmusic">Loud Music Allowed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositegender" 
+                                <% if (listing.custom_rule.includes("Opposite Gender Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="oppositegender">Opposite Gender Allowed</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party" 
+                                <% if (listing.custom_rule.includes("Party Allowed")) { %> checked <% } %> >
+                            <label class="form-check-label" for="party">Party Allowed</label>
+                        </div>
+                    </div>
                 </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Non-Veg Food Allowed" id="nonveg" 
-                        <% if (listing.custom_rule.includes("Non-Veg Food Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="nonveg">Non Veg Food</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Smoking Allowed" id="smoking" 
-                        <% if (listing.custom_rule.includes("Smoking Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="smoking">Smoking</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Drinking Allowed" id="alcohol" 
-                        <% if (listing.custom_rule.includes("Drinking Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="alcohol">Alcohol</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Pet Allowed" id="pets" 
-                        <% if (listing.custom_rule.includes("Pet Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="pets">Pets</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Visitors Allowed" id="visitorsAllowed" 
-                        <% if (listing.custom_rule.includes("Visitors Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="visitorsAllowed">Visitors Allowed</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Loud Music Allowed" id="loudmusic" 
-                        <% if (listing.custom_rule.includes("Loud Music Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="loudmusic">Loud Music</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Opposite Gender Allowed" id="oppositegender" 
-                        <% if (listing.custom_rule.includes("Opposite Gender Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="oppositegender">Opposite Gender</label>
-                </div>
-            
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="rules[]" value="Party Allowed" id="party" 
-                        <% if (listing.custom_rule.includes("Party Allowed")) { %> checked <% } %> >
-                    <label class="form-check-label" for="party">Party</label>
-                </div>
-            
                 <div class="invalid-feedback">Please select at least one rule or regulation.</div>
             </div>
-                        
-        <!-- naerby location section  -->
-            <div class="col-md-12">
+        
+            <!-- Nearby Locations Section -->
+            <div class="col-md-6">
                 <label for="nearbyUniversities" class="form-label">Nearby Target Universities</label>
-                <input type="text" class="form-control" name="nearbyUniversities" value="<%= listing.nearby_universities %>" id="nearbyUniversities" >
+                <input type="text" class="form-control" name="nearbyUniversities" value="<%= listing.nearby_universities %>" id="nearbyUniversities">
                 <div class="invalid-feedback">Please enter nearby universities.</div>
             </div>
-
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label for="nearbyOrganizations" class="form-label">Nearby Target Organizations</label>
-                <input type="text" class="form-control" name="nearbyOrganizations" value="<%= listing.nearby_organizations %>" id="nearbyOrganizations" >
+                <input type="text" class="form-control" name="nearbyOrganizations" value="<%= listing.nearby_organizations %>" id="nearbyOrganizations">
                 <div class="invalid-feedback">Please enter nearby organizations.</div>
             </div>
-
             <div class="col-md-12">
                 <label for="nearbyLocations" class="form-label">Nearby Locations</label>
-                <input type="text" class="form-control" name="nearbyLocations" value="<%= listing.nearby_locations %>" id="nearbyLocations" >
+                <input type="text" class="form-control" name="nearbyLocations" value="<%= listing.nearby_locations %>" id="nearbyLocations">
                 <div class="invalid-feedback">Please enter nearby locations.</div>
             </div>
-        </div>
+        
+            <!-- Image Upload Section -->
+            <div class="col-md-6">
+                <label for="mainImage" class="form-label">Change Profile Photo</label>
+                <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*">
+                <div class="invalid-feedback">Please upload the main image.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="additionalImages" class="form-label">Add More Photos</label>
+                <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
+            </div>
 
-        <div class="col-md-6">
-            <label for="mainImage" class="form-label">Main Image Upload</label>
-            <input type="file" class="form-control" name="mainImage" id="mainImage" accept="image/*" >
-            <div class="invalid-feedback">Please upload the main image.</div>
-        </div>
-
-        <div class="col-md-6">
-            <label for="additionalImages" class="form-label">Additional Image Uploads</label>
-            <input type="file" class="form-control" name="additionalImages" id="additionalImages" accept="image/*" multiple>
-        </div>
-        <button class="btn btn-primary mt-4" type="submit">Submit</button>
+            <div class="col-12 mt-4">
+                <button class="btn btn-primary" type="submit">Save Listing</button>
+            </div>
     </form>
 </div>
+
+<%- include("../partials/footer.ejs") %>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -474,30 +477,6 @@
 
 
 
-
-    <h1>Update PG Listing</h1>
-    <form action="/pg/owner/update/<%= listing.id %>" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" value="<%= listing.pgname %>"  />
-
-        <label for="address">Address:</label>
-        <input type="text" name="address" id="address" value="<%= listing.address %>"  />
-
-        <label for="city">City:</label>
-        <input type="text" name="city" id="city" value="<%= listing.city %>"  />
-
-        <label for="price">Price per month:</label>
-        <input type="number" name="price" id="price" value="<%= listing.price_per_month %>"  />
-
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" ><%= listing.description %></textarea>
-
-        <h3>Amenities:</h3>
-        <label><input type="checkbox" name="amenities[]" value="AC" <%= listing.amenities.AC === "true" ? "checked" : "" %> /> AC</label>
-        <label><input type="checkbox" name="amenities[]" value="WiFi" <%= listing.amenities.WiFi === "true" ? "checked" : "" %> /> WiFi</label>
-        <label><input type="checkbox" name="amenities[]" value="Parking" <%= listing.amenities.Parking === "true" ? "checked" : "" %> /> Parking</label>
-
-        <button type="submit">Update Listing</button>
-    </form>
+    
 
 

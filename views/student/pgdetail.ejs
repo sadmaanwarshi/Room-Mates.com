@@ -103,7 +103,7 @@
                         </div>
                         <div class="badge rounded-pill bg-success mb-2 p-2 text-white">
                             <% if (listing.food_availabilty === true) { %>
-                                <strong>With Food:</strong> <%= listing.food_type %>
+                                <strong>Food include:</strong> <%= listing.food_type %>
                             <% } else { %>
                                 <strong>Food Availability:</strong> Not Available
                             <% } %>
@@ -117,6 +117,19 @@
                         </p>
                     </div>
                     
+                    <div class="p-1 my-2 border rounded bg-light">
+                        <p class="card-text text-dark" >
+                            <p class="m-2"><strong>Available For:</strong> 
+                                <% if (listing.preferred_gender === "Boys") { %>
+                                    BOYS
+                                <% }else if (listing.preferred_gender === "Both"){ %>
+                                    BOYS and Girls Both
+                                    <% }else{ %>
+                                        Girls
+                                        <% } %>
+                            </p>
+                        </p>
+                    </div>
                     <!-- Details Section -->
                    <!-- Enhanced Details Section -->
 <div class="container my-4">
@@ -194,18 +207,13 @@
 </div>
 
 <!-- Tooltip Initialization -->
-<script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-</script>
+
 
                     
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
-                            <a href="/pg/user/booking/form/<%= listing.id %>">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#bookingModal-<%= listing.pg_id %>" >
                                 <button type="button" class="btn btn-danger">
                                     <i class="bi bi-bookmark-check me-2"></i> Book Now
                                 </button>
@@ -252,7 +260,75 @@
     </div>
 </div>
 
+    <!-- Modal For Booking  -->
 
+    <div class="modal fade" id="bookingModal-<%= listing.pg_id %>" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background: linear-gradient(to right, #40c9ff, #e81cff);">
+                    <h5 class="modal-title text-white" id="bookingModalLabel">Book Your Stay</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form class="row g-4 needs-validation" action="/pg/user/book/pg/<%= listing.pg_id %>" method="POST" novalidate>
+                        <!-- Stay Duration -->
+                        <div class="col-md-6">
+                            <label for="leaseYear" class="form-label">How Many Months Do You Want to Stay?</label>
+                            <input type="number" class="form-control" id="leaseYear" name="leaseYear" placeholder="Enter duration in months" min="1" max="36" required>
+                            <div class="invalid-feedback">Please specify the duration of your stay.</div>
+                        </div>
+    
+                        <!-- Number of Rooms -->
+                        <div class="col-md-6">
+                            <label for="roomsRequested" class="form-label">Number of <%= listing.rent_type %></label>
+                            <select class="form-select" id="roomsRequested" name="roomsRequested" required>
+                                <option selected disabled value="">Choose...</option>
+                                <option value="1">1 <%= listing.rent_type %></option>
+                                <option value="2">2 <%= listing.rent_type %></option>
+                                <option value="3">3 <%= listing.rent_type %></option>
+                                <option value="4">4 <%= listing.rent_type %></option>
+                                <option value="5">5 <%= listing.rent_type %></option>
+                            </select>
+                            <div class="invalid-feedback">Please select the number of rooms.</div>
+                        </div>
+    
+                        <!-- Check-In Date -->
+                        <div class="col-md-6">
+                            <label for="checkIn" class="form-label">Check-In Date</label>
+                            <input type="date" class="form-control" id="checkIn" name="checkIn" required>
+                            <div class="invalid-feedback">Please provide a check-in date.</div>
+                        </div>
+    
+                        <!-- Terms and Agreement -->
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label" for="agreeTerms">
+                                    I agree to the <a href="/terms" class="text-primary text-decoration-none">terms and conditions</a>.
+                                </label>
+                                <div class="invalid-feedback">You must agree to the terms before submitting.</div>
+                            </div>
+                        </div>
+    
+                        <!-- Submit Button -->
+                        <div class="col-12 text-center">
+                            <button class="btn btn-primary w-50" type="submit">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- end  -->
 
     <!-- crousel image  -->
 <div class="container my-4 rounded ">
@@ -512,6 +588,12 @@
     
     
     <script src="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.js"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
     <script>
         // Function to open the PG location on Google Maps
         function openOnMap(latitude, longitude) {
