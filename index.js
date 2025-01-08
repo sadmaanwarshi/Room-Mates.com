@@ -21,6 +21,8 @@ import logout from "./routes/common/logout.js";
 import authRegister from "./routes/authRegister.js"
 import dashboard from "./routes/user/dashboard.js";
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 dotenv.config();
@@ -28,7 +30,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(express.static("public"));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.json()); // For parsing application/json
@@ -73,6 +79,7 @@ app.use('/pg/owner',pgUpdate); // http://localhost:3000/pg/owner/update/:id
 app.use('/pg/owner', pgDelete); // http://localhost:3000/pg/owner/delete/:id
 app.use('/pg/owner',pgFetchOwnersPg); // http://localhost:3000/pg/owner/dashboard
 app.use('/pg/owner',bookingManage);
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 app.listen(port, ()=>{
     console.log(`server running on port ${port}`)
