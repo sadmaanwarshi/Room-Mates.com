@@ -161,8 +161,7 @@
                         <!-- Password -->
                         <div class="col-md-6">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required 
-                                   pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                             <div class="invalid-feedback">Password must be at least 8 characters, include uppercase, lowercase, number, and special character.</div>
                         </div>
 
@@ -196,3 +195,18 @@
 </div>
 
 <%- include("../partials/footer.ejs") %>
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function (e) {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const passwordPattern = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/;
+
+        if (!passwordPattern.test(password)) {
+            e.preventDefault();
+            alert("Password must be at least 8 characters, include uppercase, lowercase, number, and special character.");
+        } else if (password !== confirmPassword) {
+            e.preventDefault();
+            alert("Passwords do not match.");
+        }
+    });
+</script>

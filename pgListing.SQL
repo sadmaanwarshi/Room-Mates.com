@@ -51,7 +51,9 @@ CREATE TABLE pg_listings (
 	images TEXT[],
 	amenities JSONB,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  owner_id INT REFERENCES owners(id) ON DELETE CASCADE
+  owner_id INT REFERENCES owners(id) ON DELETE CASCADE,
+  owner_name VARCHAR(100),
+  available_rooms INTEGER
 );
 
 CREATE TABLE pg_room_info (
@@ -78,7 +80,7 @@ CREATE TABLE pg_cost_details (
 );
 
 CREATE TABLE pg_nearby_location_details(
-	pg_id INT REFERENCES pg_listing(id) ON DELETE CASCADE,
+	pg_id INT REFERENCES pg_listings(id) ON DELETE CASCADE,
 	nearby_universities TEXT,
   nearby_organizations TEXT,
   nearby_locations TEXT[],
