@@ -23,6 +23,7 @@ import dashboard from "./routes/user/dashboard.js";
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import PgSession from "connect-pg-simple";
 
 
 dotenv.config();
@@ -45,12 +46,29 @@ app.use(methodOverride('_method')); // Allow method override for PUT and DELETE
 app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // CORS setup
 app.use(express.static('public')); // Serve static files from the 'public' directory
 
-app.use(session({
+const db = new pg.Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
+
+app.use(
+  session({
+    store: new (PgSession(session))({
+      pool: db, // Use the PostgreSQL pool
+      tableName: "session", // Default table name is "session"
+    }),
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true,
-    
-  }));
+    saveUninitialized: false,
+    cookie: {
+     
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    },
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
