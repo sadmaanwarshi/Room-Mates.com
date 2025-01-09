@@ -147,8 +147,8 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
         const additionalImageUrls = await Promise.all(additionalImagesBuffers.map(uploadToCloudinaryFromBuffer));
 
         // Check the image URL output in the logs
-// console.log("Main Image URL:", mainImageUrl);
-// console.log("Additional Image URLs:", additionalImageUrls);
+console.log("Main Image URL:", mainImageUrl);
+console.log("Additional Image URLs:", additionalImageUrls);
 
         // Convert amenities to JSON
         const amenitiesObject = Object.fromEntries(["AC", "WiFi", "DrinkingWater", "Parking", "Gym", "Pool", "Laundry", "Meal", "Veg", "Nonveg"].map(key => [key, "false"]));
