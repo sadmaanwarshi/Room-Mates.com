@@ -7,7 +7,7 @@ import cloudinary from "../../config/cloudinaryConfig.js";
 import upload from "../../config/multerLocalConfig.js";
 import dotenv from 'dotenv';
 
-dotenv.config(); 
+dotenv.config();
 
 const router = Router();
 
@@ -52,7 +52,7 @@ async function getGeocode(address) {
 
 router.get("/form/add", isAuthenticated, (req, res) => {
   const user = req.session.user;
-  res.render("owner/addPgForm", {user}); // Render the form view for adding a new PG listing
+  res.render("owner/addPgForm", { user }); // Render the form view for adding a new PG listing
 });
 
 router.post(
@@ -110,8 +110,8 @@ router.post(
       Meal: "false",
       Veg: "false",
       Nonveg: "false",
-      PowerBackup : "false",
-      Bed: "false"
+      PowerBackup: "false",
+      Bed: "false",
       // Add more amenities as needed
     };
 
@@ -194,7 +194,7 @@ router.post(
         ownerName,
         quantity,
       ];
-      const { rows } = await db.query(pgListingsQuery, pgListingsValues); // getting result rowa
+      const { rows } = await db.query(pgListingsQuery, pgListingsValues); // getting result rows
       const pgId = rows[0].id; //extract pg_id from pg_listing table (main table)
 
       // Insert into pg_room_info table
@@ -236,7 +236,7 @@ router.post(
       VALUES ($1, $2, $3, $4)
   `;
       
-        const locationsArray = nearbyLocations.split(', '); //split into array nearby location
+      const locationsArray = nearbyLocations.split(', '); //split into array nearby location
       const pgNearbyLocationDetailsValues = [
         pgId,
         nearbyUniversities,
@@ -248,32 +248,24 @@ router.post(
         pgNearbyLocationDetailsValues
       ); // passing values
 
-     // Assuming you already have pgId and customRule defined
+      // Insert into pg_rules
+      if (!rules || rules.length === 0) {
+        return res.status(400).send('Please select at least one rule.');
+      }
 
-// Insert into pg_rules
-if (!rules || rules.length === 0) {
-    return res.status(400).send('Please select at least one rule.');
-}
+      // Create a query to insert the pg_id and the array of rules
+      const pgRulesQuery = `
+          INSERT INTO pg_rules_new (pgid, custom_rule)
+          VALUES ($1, $2)
+      `;
 
-// Assuming you already have pgId and customRule defined
+      const pgRulesValues = [pgId, rules]; // Pass the array directly
 
-// Insert into pg_rules
-if (rules && rules.length > 0) {
-    // Create a query to insert the pg_id and the array of rules
-    const pgRulesQuery = `
-        INSERT INTO pg_rules_new (pgid, custom_rule)
-        VALUES ($1, $2)
-    `;
-
-    const pgRulesValues = [pgId, rules]; // Pass the array directly
-
-    try {
-        await db.query(pgRulesQuery, pgRulesValues);
-    } catch (error) {
-        console.error('Error inserting data into database:', error);
-    }
-}
-
+      try {
+          await db.query(pgRulesQuery, pgRulesValues);
+      } catch (error) {
+          console.error('Error inserting data into database:', error);
+      }
 
       // Send success response with inserted listing details
       res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
@@ -281,9 +273,6 @@ if (rules && rules.length > 0) {
       console.error("Error inserting data into database:", err);
       req.session.error = "500!  Unable to Add data into the webpage Database";
       res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
-      // res
-      //   .status(500)
-      //   .json({ error: "Unable to insert data into the database" });
     }
   }
 );
