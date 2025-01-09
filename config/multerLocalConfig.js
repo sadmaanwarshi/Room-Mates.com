@@ -1,15 +1,18 @@
-// config/multerLocalConfig.js
+// multerConfig.js
 import multer from 'multer';
-import path from 'path';
+import cloudinary from './cloudinaryConfig';  // Import Cloudinary config
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Temporary storage folder
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Set up multer to directly upload files to Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary.v2,  // Use the cloudinary instance from config
+    params: {
+        folder: 'pg_images',  // Define the folder to store images in Cloudinary
+        allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],  // Allowed image formats
+    }
 });
 
-const upload = multer({ storage });
+// Create multer middleware
+const upload = multer({ storage: storage });
+
 export default upload;

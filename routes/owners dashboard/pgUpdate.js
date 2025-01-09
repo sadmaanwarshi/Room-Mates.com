@@ -114,8 +114,8 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
     nearbyLocations = `{${nearbyLocations.join(',')}}`; // Format for PostgreSQL
 
     // File paths from multer
-    const mainImagePath = req.files["mainImage"] ? req.files["mainImage"][0].path : null;
-    const additionalImagesPaths = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.path) : [];
+    // const mainImagePath = req.files["mainImage"] ? req.files["mainImage"][0].path : null;
+    // const additionalImagesPaths = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.path) : [];
 
     try {
         // Verify ownership
@@ -127,8 +127,9 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
         }
 
         // Handle image uploads
-        const mainImageUrl = mainImagePath ? await uploadToCloudinary(mainImagePath) : null;
-        const additionalImageUrls = await Promise.all(additionalImagesPaths.map(uploadToCloudinary));
+        const mainImageUrl = req.files["mainImage"] ? req.files["mainImage"][0].path : null;
+        const additionalImageUrls = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.path) : [];
+
 
         // Convert amenities to JSON
         const amenitiesObject = Object.fromEntries(["AC", "WiFi", "DrinkingWater", "Parking", "Gym", "Pool", "Laundry", "Meal", "Veg", "Nonveg"].map(key => [key, "false"]));
