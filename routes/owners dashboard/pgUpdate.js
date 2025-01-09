@@ -81,18 +81,33 @@ router.get("/edit/:id", isAuthenticated, async (req, res) => {
 
 
 // Helper function to handle Cloudinary uploads and file deletion
-async function uploadToCloudinary(filePath) {
+async function uploadToCloudinaryFromBuffer(buffer) {
     try {
-        const result = await cloudinary.uploader.upload(filePath, { folder: "pg_images" });
-        fs.unlink(filePath, (err) => {
-            if (err) console.error("Error deleting file:", err);
-        });
-        return result.secure_url;
+      // Upload the buffer directly using the 'file' option
+      const result = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'auto', // Automatically detects the file type (e.g., image, video)
+            folder: 'pg_images',   // Optional: specify folder in your Cloudinary account
+          },
+          (error, result) => {
+            if (error) {
+              reject(new Error("Cloudinary upload failed: " + error.message));
+            }
+            resolve(result);
+          }
+        ).end(buffer); // Pipe the buffer into Cloudinary's upload stream
+      });
+  
+      // Return the secure URL of the uploaded image
+      return result.secure_url;
     } catch (error) {
-        console.error("Cloudinary upload failed:", error);
-        throw new Error("Image upload failed.");
+      console.error("Cloudinary upload failed:", error);
+      throw new Error("Image upload failed.");
     }
-}
+  }
+  
+
 
 // Optimized route handler
 router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }, { name: "additionalImages" }]), async (req, res) => {
@@ -113,9 +128,10 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
     let nearbyLocations = req.body.nearbyLocations ? req.body.nearbyLocations.split(',').map(item => item.trim()) : [];
     nearbyLocations = `{${nearbyLocations.join(',')}}`; // Format for PostgreSQL
 
-    // File paths from multer
-    // const mainImagePath = req.files["mainImage"] ? req.files["mainImage"][0].path : null;
-    // const additionalImagesPaths = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.path) : [];
+   // File data from multer (buffer in memory)
+   const mainImageBuffer = req.files["mainImage"] ? req.files["mainImage"][0].buffer : null;
+   const additionalImagesBuffers = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.buffer) : [];
+
 
     try {
         // Verify ownership
@@ -126,10 +142,13 @@ router.post("/update/:id", isAuthenticated, upload.fields([{ name: "mainImage" }
             return res.status(403).json({ error: 'Unauthorized to update this listing.' });
         }
 
-        // Handle image uploads
-        const mainImageUrl = req.files["mainImage"] ? req.files["mainImage"][0].path : null;
-        const additionalImageUrls = req.files["additionalImages"] ? req.files["additionalImages"].map(file => file.path) : [];
+        // Handle image uploads (directly to Cloudinary)
+        const mainImageUrl = mainImageBuffer ? await uploadToCloudinaryFromBuffer(mainImageBuffer) : null;
+        const additionalImageUrls = await Promise.all(additionalImagesBuffers.map(uploadToCloudinaryFromBuffer));
 
+        // Check the image URL output in the logs
+// console.log("Main Image URL:", mainImageUrl);
+// console.log("Additional Image URLs:", additionalImageUrls);
 
         // Convert amenities to JSON
         const amenitiesObject = Object.fromEntries(["AC", "WiFi", "DrinkingWater", "Parking", "Gym", "Pool", "Laundry", "Meal", "Veg", "Nonveg"].map(key => [key, "false"]));
