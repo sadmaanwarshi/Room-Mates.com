@@ -1,11 +1,10 @@
 import { Router } from "express";
 import axios from "axios";
 import pg from "pg";
-import fs from "fs";
-import isAuthenticated from "../../middleware/authenticate.js";
+import multer from "multer";
 import cloudinary from "../../config/cloudinaryConfig.js";
-import upload from "../../config/multerLocalConfig.js";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import isAuthenticated from "../../middleware/authenticate.js";
 
 dotenv.config();
 
@@ -21,8 +20,12 @@ const db = new pg.Client({
 
 db.connect();
 
+// Multer storage configuration for streaming uploads directly
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 async function getGeocode(address) {
-  const apiKey = process.env.OLA_APIKEY; // Wrap in quotes
+  const apiKey = process.env.OLA_APIKEY;
   const url = `https://api.olamaps.io/places/v1/geocode?address=${encodeURIComponent(
     address
   )}&language=english&api_key=${apiKey}`;
@@ -30,13 +33,11 @@ async function getGeocode(address) {
   try {
     const response = await axios.get(url, { timeout: 10000 });
 
-    // Check if the response contains geocoding results
     if (
       response.data.geocodingResults &&
       response.data.geocodingResults.length > 0
     ) {
       const location = response.data.geocodingResults[0].geometry.location;
-      // Extract latitude and longitude
       return {
         latitude: location.lat,
         longitude: location.lng,
@@ -60,7 +61,6 @@ router.post(
   isAuthenticated,
   upload.fields([{ name: "mainImage" }, { name: "additionalImages" }]),
   async (req, res) => {
-    // Extract details from the body
     const {
       ownerName,
       pgName,
@@ -89,16 +89,11 @@ router.post(
       nearbyLocations,
     } = req.body;
 
-    // console.log(req.body);
-
-    const mainImagePath = req.files["mainImage"]
-      ? req.files["mainImage"][0].path
+    const mainImage = req.files["mainImage"]
+      ? req.files["mainImage"][0]
       : null;
-    const additionalImagesPaths = req.files["additionalImages"]
-      ? req.files["additionalImages"].map((file) => file.path)
-      : [];
+    const additionalImages = req.files["additionalImages"] || [];
 
-    // Initialize an empty object for amenities
     const amenitiesObject = {
       AC: "false",
       WiFi: "false",
@@ -112,74 +107,50 @@ router.post(
       Nonveg: "false",
       PowerBackup: "false",
       Bed: "false",
-      // Add more amenities as needed
     };
 
-    // Convert the amenities array into the desired object format
     if (amenities && Array.isArray(amenities)) {
       amenities.forEach((amenity) => {
         if (amenitiesObject.hasOwnProperty(amenity)) {
-          amenitiesObject[amenity] = "true"; // Set to "true" for checked amenities
+          amenitiesObject[amenity] = "true";
         }
       });
     }
 
-    const amenitiesJson = JSON.stringify(amenitiesObject); // Convert the object to JSON format
-    const ownerId = req.user.id; // Extract owner ID from the authenticated user
+    const amenitiesJson = JSON.stringify(amenitiesObject);
+    const ownerId = req.user.id;
 
     try {
-      // Get geocode (latitude, longitude) from the address
       const geocode = await getGeocode(`${address}, ${city}`);
       const { latitude, longitude } = geocode;
 
-      // Handle main image upload
-      let mainImageUrl;
-      if (mainImagePath) {
-        const mainImageResult = await cloudinary.uploader.upload(
-          mainImagePath,
-          {
-            folder: "pg_images",
-            timeout: 10000,
-          }
-        );
-        mainImageUrl = mainImageResult.secure_url; // Getting link of main image
-
-        // Unlink main image from temporary folder
-        fs.unlink(mainImagePath, (err) => {
-          if (err) console.error("Failed to delete main image file:", err);
-          else
-            console.log(
-              "Main image local file deleted after Cloudinary upload"
-            );
-        });
-      }
-
-      // Handle array of images upload
-      const additionalImageUrls = [];
-      for (const path of additionalImagesPaths) {
-        const imageResult = await cloudinary.uploader.upload(path, {
+      let mainImageUrl = null;
+      if (mainImage) {
+        const mainImageResult = await cloudinary.uploader.upload_stream({
           folder: "pg_images",
-          timeout: 10000,
         });
-        additionalImageUrls.push(imageResult.secure_url); // Getting link of additional images
-
-        // Unlink additional images from temporary folder
-        fs.unlink(path, (err) => {
-          if (err)
-            console.error("Failed to delete additional image file:", err);
-          else
-            console.log(
-              "Additional image local file deleted after Cloudinary upload"
-            );
-        });
+        mainImageUrl = mainImageResult.secure_url;
       }
 
-      // Insert data into the database
-      //inserting on pg_listing table (main table)
+      const additionalImageUrls = [];
+      for (const file of additionalImages) {
+        const uploadResult = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "pg_images" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            }
+          );
+          uploadStream.end(file.buffer);
+        });
+        additionalImageUrls.push(uploadResult.secure_url);
+      }
+
       const pgListingsQuery = `
         INSERT INTO pg_listings (pg_name, address, city, state, latitude, longitude, phone_number, alternate_phone_number, main_image, images, amenities, owner_id, owner_name, available_rooms)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id
-    `;
+      `;
       const pgListingsValues = [
         pgName,
         address,
@@ -196,14 +167,13 @@ router.post(
         ownerName,
         quantity,
       ];
-      const { rows } = await db.query(pgListingsQuery, pgListingsValues); // getting result rows
-      const pgId = rows[0].id; //extract pg_id from pg_listing table (main table)
+      const { rows } = await db.query(pgListingsQuery, pgListingsValues);
+      const pgId = rows[0].id;
 
-      // Insert into pg_room_info table
       const pgRoomInfoQuery = `
-      INSERT INTO pg_room_info (pg_id, notice_period, preferred_tenants, description, preferred_gender, rent_type, quantity, room_type)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-  `;
+        INSERT INTO pg_room_info (pg_id, notice_period, preferred_tenants, description, preferred_gender, rent_type, quantity, room_type)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `;
       const pgRoomInfoValues = [
         pgId,
         noticePeriod,
@@ -214,13 +184,12 @@ router.post(
         quantity,
         roomType,
       ];
-      await db.query(pgRoomInfoQuery, pgRoomInfoValues); // simply passing values
+      await db.query(pgRoomInfoQuery, pgRoomInfoValues);
 
-      // Insert into pg_cost_details Table
       const pgCostDetailsQuery = `
-       INSERT INTO pg_cost_details (pg_id, price_per_month, deposit_amount, electric_charge, maintenance_fee, food_availabilty, food_type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-   `;
+        INSERT INTO pg_cost_details (pg_id, price_per_month, deposit_amount, electric_charge, maintenance_fee, food_availabilty, food_type)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `;
       const pgCostDetailsValues = [
         pgId,
         priceMonthly,
@@ -230,50 +199,31 @@ router.post(
         foodAvailability,
         foodType,
       ];
-      await db.query(pgCostDetailsQuery, pgCostDetailsValues); //simply passing values
+      await db.query(pgCostDetailsQuery, pgCostDetailsValues);
 
-      // Insert into pg_nearby_location_details
       const pgNearbyLocationDetailsQuery = `
-      INSERT INTO pg_nearby_location_details (pg_id, nearby_universities, nearby_organizations, nearby_locations)
-      VALUES ($1, $2, $3, $4)
-  `;
-      
-      const locationsArray = nearbyLocations.split(', '); //split into array nearby location
+        INSERT INTO pg_nearby_location_details (pg_id, nearby_universities, nearby_organizations, nearby_locations)
+        VALUES ($1, $2, $3, $4)
+      `;
       const pgNearbyLocationDetailsValues = [
         pgId,
         nearbyUniversities,
         nearbyOrganizations,
-        locationsArray,
+        nearbyLocations.split(", "),
       ];
-      await db.query(
-        pgNearbyLocationDetailsQuery,
-        pgNearbyLocationDetailsValues
-      ); // passing values
+      await db.query(pgNearbyLocationDetailsQuery, pgNearbyLocationDetailsValues);
 
-      // Insert into pg_rules
-      if (!rules || rules.length === 0) {
-        return res.status(400).send('Please select at least one rule.');
-      }
-
-      // Create a query to insert the pg_id and the array of rules
       const pgRulesQuery = `
-          INSERT INTO pg_rules_new (pgid, custom_rule)
-          VALUES ($1, $2)
+        INSERT INTO pg_rules_new (pgid, custom_rule)
+        VALUES ($1, $2)
       `;
+      const pgRulesValues = [pgId, rules];
+      await db.query(pgRulesQuery, pgRulesValues);
 
-      const pgRulesValues = [pgId, rules]; // Pass the array directly
-
-      try {
-          await db.query(pgRulesQuery, pgRulesValues);
-      } catch (error) {
-          console.error('Error inserting data into database:', error);
-      }
-
-      // Send success response with inserted listing details
       res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
-    } catch (err) {
-      console.error("Error inserting data into database:", err);
-      req.session.error = "500!  Unable to Add data into the webpage Database";
+    } catch (error) {
+      console.error("Error adding PG:", error);
+      req.session.error = "500! Unable to add data.";
       res.redirect(`/pg/owner/dashboard?user=${ownerId}`);
     }
   }
