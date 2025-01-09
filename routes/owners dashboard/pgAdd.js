@@ -28,7 +28,7 @@ async function getGeocode(address) {
   )}&language=english&api_key=${apiKey}`;
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, { timeout: 10000 });
 
     // Check if the response contains geocoding results
     if (
@@ -89,7 +89,7 @@ router.post(
       nearbyLocations,
     } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     const mainImagePath = req.files["mainImage"]
       ? req.files["mainImage"][0].path
@@ -139,6 +139,7 @@ router.post(
           mainImagePath,
           {
             folder: "pg_images",
+            timeout: 10000,
           }
         );
         mainImageUrl = mainImageResult.secure_url; // Getting link of main image
@@ -158,6 +159,7 @@ router.post(
       for (const path of additionalImagesPaths) {
         const imageResult = await cloudinary.uploader.upload(path, {
           folder: "pg_images",
+          timeout: 10000,
         });
         additionalImageUrls.push(imageResult.secure_url); // Getting link of additional images
 
