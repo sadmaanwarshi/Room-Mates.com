@@ -125,12 +125,25 @@ router.post(
       const { latitude, longitude } = geocode;
 
       let mainImageUrl = null;
-      if (mainImage) {
-        const mainImageResult = await cloudinary.uploader.upload_stream({
-          folder: "pg_images",
-        });
-        mainImageUrl = mainImageResult.secure_url;
-      }
+if (mainImage) {
+  try {
+    const mainImageResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "pg_images" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(mainImage.buffer);
+    });
+    mainImageUrl = mainImageResult.secure_url;
+  } catch (error) {
+    console.error("Error uploading main image:", error);
+    throw new Error("Failed to upload main image");
+  }
+}
+
 
       const additionalImageUrls = [];
       for (const file of additionalImages) {
