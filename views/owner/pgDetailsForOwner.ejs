@@ -1,5 +1,5 @@
 <title>Room-Mates - Details PG</title>
-<%- include("../partials/student/navbar.ejs") %>
+<%- include("../partials/owner/navbar.ejs") %>
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.15.3/dist/maplibre-gl.css" />
 <style>
@@ -214,8 +214,8 @@
                     <!-- Action Buttons -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#bookingModal-<%= listing.pg_id %>" >
-                                <button type="button" class="btn btn-danger">
+                            <a href="#"  >
+                                <button type="button" class="btn btn-danger disabled">
                                     <i class="bi bi-bookmark-check me-2"></i> Book Now
                                 </button>
                             </a>
@@ -261,73 +261,7 @@
     </div>
 </div>
 
-    <!-- Modal For Booking  -->
-
-    <div class="modal fade" id="bookingModal-<%= listing.pg_id %>" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content shadow">
-                <!-- Modal Header -->
-                <div class="modal-header" style="background: linear-gradient(to right, #40c9ff, #e81cff);">
-                    <h5 class="modal-title text-white" id="bookingModalLabel">Book Your Stay</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <form class="row g-4 needs-validation" action="/pg/user/book/pg/<%= listing.pg_id %>" method="POST" novalidate>
-                        <!-- Stay Duration -->
-                        <div class="col-md-6">
-                            <label for="leaseYear" class="form-label">How Many Months Do You Want to Stay?</label>
-                            <input type="number" class="form-control" id="leaseYear" name="leaseYear" placeholder="Enter duration in months" min="1" max="36" required>
-                            <div class="invalid-feedback">Please specify the duration of your stay.</div>
-                        </div>
-    
-                        <!-- Number of Rooms -->
-                        <div class="col-md-6">
-                            <label for="roomsRequested" class="form-label">Number of <%= listing.rent_type %></label>
-                            <select class="form-select" id="roomsRequested" name="roomsRequested" required>
-                                <option selected disabled value="">Choose...</option>
-                                <option value="1">1 <%= listing.rent_type %></option>
-                                <option value="2">2 <%= listing.rent_type %></option>
-                                <option value="3">3 <%= listing.rent_type %></option>
-                                <option value="4">4 <%= listing.rent_type %></option>
-                                <option value="5">5 <%= listing.rent_type %></option>
-                            </select>
-                            <div class="invalid-feedback">Please select the number of rooms.</div>
-                        </div>
-    
-                        <!-- Check-In Date -->
-                        <div class="col-md-6">
-                            <label for="checkIn" class="form-label">Check-In Date</label>
-                            <input type="date" class="form-control" id="checkIn" name="checkIn" required>
-                            <div class="invalid-feedback">Please provide a check-in date.</div>
-                        </div>
-    
-                        <!-- Terms and Agreement -->
-                        <div class="col-12">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
-                                <label class="form-check-label" for="agreeTerms">
-                                    I agree to the <a href="/terms" class="text-primary text-decoration-none">terms and conditions</a>.
-                                </label>
-                                <div class="invalid-feedback">You must agree to the terms before submitting.</div>
-                            </div>
-                        </div>
-    
-                        <!-- Submit Button -->
-                        <div class="col-12 text-center">
-                            <button class="btn btn-primary w-50" type="submit">Confirm Booking</button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
     <!-- end  -->
 
@@ -626,19 +560,7 @@
 </div>
 
 
-    <!-- <h1>PG Details: <%= listing.name %></h1>
-    <p><strong>Address:</strong> <%= listing.address %></p>
-    <p><strong>City:</strong> <%= listing.city %></p>
-    <p><strong>Price per month:</strong> <%= listing.price_per_month %></p>
-    <p><strong>Amenities:</strong></p>
-    <ul>
-        <% for (let amenity in listing.amenities) { %>
-            <li><%= amenity %>: <%= listing.amenities[amenity] %></li>
-        <% } %>
-    </ul>
-
-    <!-- Button to View on Google Maps -->
-    <!-- <button onclick="openOnMap('<%= listing.latitude %>', '<%= listing.longitude %>')">View on Map</button> -->
+    
 
     <%- include("../partials/footer.ejs") %> -->
 

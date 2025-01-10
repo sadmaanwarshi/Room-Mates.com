@@ -20,6 +20,7 @@ import bookingManage from "./routes/owners dashboard/bookingManage.js"
 import logout from "./routes/common/logout.js";
 import authRegister from "./routes/authRegister.js"
 import dashboard from "./routes/user/dashboard.js";
+import fetchPgDetails from "./routes/owners dashboard/fetchPgDetails.js";
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -65,7 +66,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
      
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 30 * 60 * 1000, // 1 day
     },
   })
 );
@@ -96,6 +97,7 @@ app.use('/pg/owner',pgUpdate); // http://localhost:3000/pg/owner/update/:id
 app.use('/pg/owner', pgDelete); // http://localhost:3000/pg/owner/delete/:id
 app.use('/pg/owner',pgFetchOwnersPg); // http://localhost:3000/pg/owner/dashboard
 app.use('/pg/owner',bookingManage);
+app.use('/pg/owner', fetchPgDetails);
 app.get('/favicon.ico', (req, res) => res.status(204));
 
 app.listen(port, ()=>{
