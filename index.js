@@ -78,7 +78,7 @@ app.use(passport.session());
 // app.use('/send', sendMail)
 
 app.use('/',homepage); //home page (index.ejs)
-app.use('/home',dashboard);
+app.use('/home',dashboard); //homepage of student
 // User function
 app.use('/auth', auth); // http://localhost:3000/auth/login/student
 app.use('/auth', authRegister); // http://localhost:3000/auth/login/student

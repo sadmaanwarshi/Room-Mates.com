@@ -73,7 +73,7 @@ router.post('/register/owner', [
 ], async (req, res) => {
 
     const {
-        businessName,
+        
         ownerName,
         email,
         password,
@@ -85,7 +85,7 @@ router.post('/register/owner', [
         pincode,
         propertyName,
         businessDescription,
-        terms
+       
       } = req.body;
 
     const errors = validationResult(req); // is any error in validator name, email or password
@@ -108,9 +108,9 @@ router.post('/register/owner', [
 
       // Create a new user
       await db.query(
-      "INSERT INTO owners (business_name, owner_name, email, password, phone_number, license_number, address, city, state, pincode, property_name, business_description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+      "INSERT INTO owners (owner_name, email, password, phone_number, license_number, address, city, state, pincode, property_name, business_description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
       [
-        businessName,
+       
         ownerName,
         email,
         secPass,
