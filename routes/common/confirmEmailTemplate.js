@@ -2,7 +2,7 @@ import sendMail from "./emailSend.js";
 
 async function sendBookingConfirmation(email, userName, pgName, bookingReference, checkInDate, ownerName, ownerPhone) {
     const recipient = email;
-    const subject = "Booking Confirmation - PG Finder";
+    const subject = "Booking Confirmation - Roomiess-Finder";
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -72,7 +72,7 @@ async function sendBookingConfirmation(email, userName, pgName, bookingReference
             <tr>
                 <td class="header">
                     <h2>Booking Confirmed!</h2>
-                    <p>Your stay is confirmed with PG Finder</p>
+                    <p>Your stay is confirmed with Roomies-Finder</p>
                 </td>
             </tr>
             <tr>
@@ -110,7 +110,7 @@ async function sendBookingConfirmation(email, userName, pgName, bookingReference
             </tr>
             <tr>
                 <td class="footer">
-                    &copy; 2024 PG Finder. All rights reserved.
+                    &copy; 2025 Roomiess-Finder. All rights reserved.
                 </td>
             </tr>
         </table>

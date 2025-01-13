@@ -73,7 +73,6 @@ router.post('/register/owner', [
 ], async (req, res) => {
 
     const {
-        
         ownerName,
         email,
         password,
@@ -84,8 +83,7 @@ router.post('/register/owner', [
         state,
         pincode,
         propertyName,
-        businessDescription,
-       
+        businessDescription,   
       } = req.body;
 
     const errors = validationResult(req); // is any error in validator name, email or password
@@ -93,6 +91,7 @@ router.post('/register/owner', [
         console.log(errors.array()); // Log errors to see what's wrong
         return res.status(400).json({ errors: errors.array() });
     }
+    
     try {
         console.log(req.body)
         // Check whether the user with this email exists already

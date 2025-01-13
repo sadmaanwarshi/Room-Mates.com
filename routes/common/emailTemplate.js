@@ -42,7 +42,7 @@ async function sendTemplateMessage(email, ownerName, userName, userEmail, userPh
             </table>
             <p>Please log in to your dashboard to review and take action on this request.</p>
             <div style="text-align: center; margin: 20px 0;">
-              <a href="https://yourwebsite.com/dashboard" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;">
+              <a href="https://roomiessfinder.vercel.app/auth/page/login/owner" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;">
                 Go to Dashboard
               </a>
             </div>
@@ -51,7 +51,7 @@ async function sendTemplateMessage(email, ownerName, userName, userEmail, userPh
         </tr>
         <tr>
           <td style="text-align: center; padding: 10px; background-color: #f8f9fa; font-size: 12px; color: #6c757d;">
-            &copy; 2024 PG Finder. All rights reserved.
+            &copy; 2025 Roomiess-Finder. All rights reserved.
           </td>
         </tr>
       </table>

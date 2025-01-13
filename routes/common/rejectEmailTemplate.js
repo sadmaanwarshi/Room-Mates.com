@@ -2,7 +2,7 @@ import sendMail from "./emailSend.js";
 
 async function sendBookingRejection(email, userName, pgName, rejectionReason) {
     const recipient = email;
-    const subject = "Booking Request Rejected - PG Finder";
+    const subject = "Booking Request Rejected - Roomiess-Finder";
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -86,7 +86,7 @@ async function sendBookingRejection(email, userName, pgName, rejectionReason) {
             </tr>
             <tr>
                 <td class="footer">
-                    &copy; 2024 PG Finder. All rights reserved.
+                    &copy; 2025 Roomiess-Finder. All rights reserved.
                 </td>
             </tr>
         </table>
