@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true, // Use true for port 465
     auth: {
-        user: "spwarshi@gmail.com",
+        user: "roomiessfinder@gmail.com",
         pass: process.env.NODEMAILER_PASS, // Use your App Password here
     },
 });
@@ -17,15 +17,15 @@ const transporter = nodemailer.createTransport({
 async function sendMail(to, sub, msg) {
     try {
         const info = await transporter.sendMail({
-            from: '"Sadmaan Warshi" <spwarshi@gmail.com>', // Sender's name and email
+            from: '"Roomiess Finder" <roomiessfinder@gmail.com>', // Sender's name and email
             to: to, // Recipient's email
             subject: sub, // Subject line
             html: msg, // Email content in HTML
         });
 
-        console.log("Email sent: ", info.messageId);
+        // console.log("Email sent: ", info.messageId);
     } catch (error) {
-        console.error("Error while sending email: ", error);
+        // console.error("Error while sending email: ", error);
     }
 }
 
